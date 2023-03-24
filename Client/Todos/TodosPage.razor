@@ -1,6 +1,7 @@
 ﻿@page "/todos"
 @inject ITodosClient TodosClient
 @inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
 <PageTitle>Todos</PageTitle>
 
@@ -103,5 +104,7 @@ else
         await TodosClient.DeleteTodoAsync(todo.Id);
 
         todos?.Remove(todo);
+
+        Snackbar.Add("Todo removed", Severity.Info);
     }
 }
