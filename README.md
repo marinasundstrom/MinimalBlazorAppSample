@@ -1,4 +1,4 @@
-﻿# BlazorApp1
+﻿# Minimal Blazor app with Backend API
 
 ## Features
 
