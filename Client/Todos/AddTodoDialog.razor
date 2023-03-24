@@ -1,4 +1,5 @@
 ﻿@inject ITodosClient TodosClient
+@inject ISnackbar Snackbar
 
 <EditForm Model="@this" OnValidSubmit="Submit">
     <DataAnnotationsValidator />
@@ -24,12 +25,19 @@
 
     async Task Submit()
     {
-        var todo = await TodosClient.AddTodoAsync(new AddTodoRequest()
-        {
-            Title = Title
-        });
+        try
+        { 
+            var todo = await TodosClient.AddTodoAsync(new AddTodoRequest()
+            {
+                Title = Title
+            });
 
-        MudDialog.Close(DialogResult.Ok(todo));
+            MudDialog.Close(DialogResult.Ok(todo));
+        }
+        catch
+        {
+            Snackbar.Add("Todo could not be added", Severity.Error);
+        }
     }
 
     void Cancel() => MudDialog.Cancel();

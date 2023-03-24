@@ -53,8 +53,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-
-
         await LoadTodos();
     }
 
@@ -69,15 +67,25 @@ else
             todos = new List<Todo>();
             noTodos = true;
         }
+        catch
+        {
+            Snackbar.Add("Todos could not be loaded", Severity.Error);
+        }
     }
 
     private async Task OnTodoCheckedChanged(Todo todo)
     {
-        var updatedTodo = await TodosClient.MarkTodoAsCompleteAsync(todo.Id);
+        try
+        {
+            var updatedTodo = await TodosClient.MarkTodoAsCompleteAsync(todo.Id);
 
-        todo.IsCompleted = true;
-        todo.Completed = updatedTodo.Completed;
-
+            todo.IsCompleted = true;
+            todo.Completed = updatedTodo.Completed;
+        }
+        catch
+        {
+            Snackbar.Add("Todo could not be updated", Severity.Error);
+        }
     }
 
     private async Task OnAddTodoClicked()
@@ -101,10 +109,17 @@ else
         if (!result.GetValueOrDefault())
             return;
 
-        await TodosClient.DeleteTodoAsync(todo.Id);
+        try
+        {
+            await TodosClient.DeleteTodoAsync(todo.Id);
 
-        todos?.Remove(todo);
+            todos?.Remove(todo);
 
-        Snackbar.Add("Todo removed", Severity.Info);
+            Snackbar.Add("Todo removed", Severity.Info);
+        }
+        catch
+        {
+            Snackbar.Add("Todo was not removed", Severity.Error);
+        }
     }
 }
