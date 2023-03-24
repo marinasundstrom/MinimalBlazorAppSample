@@ -1,0 +1,36 @@
+﻿@inject ITodosClient TodosClient
+
+<EditForm Model="@this" OnValidSubmit="Submit">
+    <DataAnnotationsValidator />
+
+    <MudDialog>
+        <DialogContent>
+            <MudTextField Label="Title" Lines="3" Variant="@Variant.Outlined" @bind-Value="Title" For="() => Title" HelperText="What is this todo about?" />
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary">Add</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>
+
+
+@code {
+    [Parameter]
+    [Required]
+    public string Title { get; set; } = default!;
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
+
+    async Task Submit()
+    {
+        var todo = await TodosClient.AddTodoAsync(new AddTodoRequest()
+        {
+            Title = Title
+        });
+
+        MudDialog.Close(DialogResult.Ok(todo));
+    }
+
+    void Cancel() => MudDialog.Cancel();
+}
