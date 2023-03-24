@@ -12,7 +12,7 @@
 		<OpenApiReference Include="OpenAPIs\swagger.json" Options="/UseBaseUrl:false /GenerateClientInterfaces:true /GenerateNullableReferenceTypes:true" Namespace="BlazorApp1.Client">
 			<SourceUri>https://localhost:5001/swagger/v1/swagger.json</SourceUri>
 			<ClassName>{controller}Client</ClassName>
-			<OutputPath>DataMigrationClient.cs</OutputPath>
+			<OutputPath>BlazorApp1Clients.cs</OutputPath>
 		</OpenApiReference>
 	</ItemGroup>
 
