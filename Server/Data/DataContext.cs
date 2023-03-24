@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlazorApp1.Server.Data;
 
-public class DataContext : DbContext
+public sealed class DataContext : DbContext
 {
     public DataContext(DbContextOptions<DataContext> options)
         : base(options)
