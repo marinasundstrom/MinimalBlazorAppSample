@@ -2,8 +2,7 @@
 
 ## Features
 
-
-### Frontend
+### Fronten
 * Blazor - MudBlazor UI
 * Clients generated from Open API
 
@@ -11,6 +10,7 @@
 * Minimal API endpoints
   * Versioned API
   * Open API with Swagger
+* SignalR
 * Entity Framework Core - Sqlite database
 * Integration tests
 

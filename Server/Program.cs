@@ -2,6 +2,7 @@
 using BlazorApp1.Server;
 using BlazorApp1.Server.Data;
 using BlazorApp1.Server.Endpoints;
+using BlazorApp1.Server.Hubs;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Options;
@@ -20,6 +21,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRazorPages();
 
 builder.Services.AddProblemDetails();
+
+builder.Services.AddSignalR();
+builder.Services.AddResponseCompression(opts =>
+{
+    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+        new[] { "application/octet-stream" });
+});
 
 builder.Services.AddSqlite<DataContext>(
     builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -75,6 +83,8 @@ foreach (var description in apiVersionDescriptions)
 
 var app = builder.Build();
 
+app.UseResponseCompression();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -129,6 +139,7 @@ app.UseSwaggerUi3(options =>
 
 app.MapRazorPages();
 
+app.MapHub<ChatHub>("/chathub");
 app.MapFallbackToFile("index.html");
 
 using (var scope = app.Services.CreateScope())
