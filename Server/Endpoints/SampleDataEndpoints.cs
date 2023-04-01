@@ -45,7 +45,7 @@ public static class SampleDataEndpoints
             Summary = Summaries[Random.Shared.Next(Summaries.Length)]
         }).ToArray();
 
-        return Results.Ok(forecasts);
+        return TypedResults.Ok(forecasts);
     }
 
     public class WeatherForecast

@@ -71,10 +71,10 @@ public static class TodosEndpoints
 
         if (!todos.Any())
         {
-            return Results.NoContent();
+            return TypedResults.NoContent();
         }
 
-        return Results.Ok(todos);
+        return TypedResults.Ok(todos);
     }
 
     public static async Task<IResult> GetTodoById(Guid id, DataContext context, CancellationToken cancellationToken)
@@ -83,10 +83,10 @@ public static class TodosEndpoints
 
         if (todo is null)
         {
-            return Results.NotFound();
+            return TypedResults.NotFound();
         }
 
-        return Results.Ok(todo);
+        return TypedResults.Ok(todo);
     }
 
     public static async Task<IResult> AddTodo(AddTodoRequest request, DataContext context, CancellationToken cancellationToken)
@@ -97,7 +97,7 @@ public static class TodosEndpoints
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return Results.Created($"/v1/Todos/{todo.Id}", todo);
+        return TypedResults.Created($"/v1/Todos/{todo.Id}", todo);
     }
 
     public static async Task<IResult> UpdateTodo(Guid id, UpdateTodoRequest request, DataContext context, CancellationToken cancellationToken)
@@ -106,14 +106,14 @@ public static class TodosEndpoints
 
         if (todo is null)
         {
-            return Results.NotFound();
+            return TypedResults.NotFound();
         }
 
         todo.Title = request.Title;
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(todo);
+        return TypedResults.Ok(todo);
     }
 
     public static async Task<IResult> MarkTodoAsComplete(Guid id, DataContext context, CancellationToken cancellationToken)
@@ -122,14 +122,14 @@ public static class TodosEndpoints
 
         if (todo is null)
         {
-            return Results.NotFound();
+            return TypedResults.NotFound();
         }
 
         todo.Complete();
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return Results.Ok(todo);
+        return TypedResults.Ok(todo);
     }
 
     public static async Task<IResult> DeleteTodo(Guid id, DataContext context, CancellationToken cancellationToken)
@@ -143,7 +143,7 @@ public static class TodosEndpoints
             return Results.NotFound();
         }
 
-        return Results.Ok();
+        return TypedResults.Ok();
     }
 
     public sealed record AddTodoRequest(string Title);
