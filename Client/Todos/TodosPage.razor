@@ -33,7 +33,7 @@
         </MudTd>
     </RowTemplate>
     <PagerContent>
-        <MudTablePager PageSizeOptions="new int[]{50, 100}" />
+        <MudTablePager PageSizeOptions="new int[]{10, 20, 50, 100}" />
     </PagerContent>
 </MudTable>
 
@@ -101,6 +101,12 @@
                 searchString, state.SortDirection == MudBlazor.SortDirection.None ? null : state.SortLabel, state.SortDirection == MudBlazor.SortDirection.None ? null : (state.SortDirection == MudBlazor.SortDirection.Ascending ? BlazorApp1.Client.SortDirection.Asc : BlazorApp1.Client.SortDirection.Desc));
 
             return new TableData<Todo>() { TotalItems = result.TotalItems, Items = result.Items };
+        }
+        catch(ApiException exc)
+        {
+            Snackbar.Add("Failed to load todos.", Severity.Error);
+
+            return new TableData<Todo>();
         }
         finally
         {
