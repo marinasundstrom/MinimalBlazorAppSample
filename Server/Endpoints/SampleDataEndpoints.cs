@@ -1,5 +1,7 @@
 ﻿using System.Data;
+
 using Asp.Versioning.Builder;
+
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BlazorApp1.Server.Endpoints;

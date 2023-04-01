@@ -1,11 +1,14 @@
 ﻿using Asp.Versioning;
+
 using BlazorApp1.Server;
 using BlazorApp1.Server.Data;
 using BlazorApp1.Server.Endpoints;
 using BlazorApp1.Server.Hubs;
+
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Options;
+
 using NSwag;
 using NSwag.AspNetCore;
 using NSwag.Generation.Processors.Security;

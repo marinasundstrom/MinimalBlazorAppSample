@@ -1,8 +1,11 @@
 ﻿using System.Data;
 using System.Threading;
+
 using Asp.Versioning.Builder;
+
 using BlazorApp1.Server.Data;
 using BlazorApp1.Server.Models;
+
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
@@ -66,7 +69,7 @@ public static class TodosEndpoints
     {
         var todos = await context.Todos.ToArrayAsync(cancellationToken);
 
-        if(!todos.Any())
+        if (!todos.Any())
         {
             return Results.NoContent();
         }

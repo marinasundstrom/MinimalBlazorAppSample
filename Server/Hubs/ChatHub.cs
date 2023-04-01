@@ -2,7 +2,12 @@
 
 namespace BlazorApp1.Server.Hubs;
 
-public sealed class ChatHub : Hub<IChatHub>
+public interface IChatHub
+{
+    Task SendMessage(string user, string message);
+}
+
+public sealed class ChatHub : Hub<IChatClient>, IChatHub
 {
     public async Task SendMessage(string user, string message)
     {
