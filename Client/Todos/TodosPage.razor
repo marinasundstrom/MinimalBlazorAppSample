@@ -7,71 +7,41 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true">Todos</MudText>
 
-@if (noTodos)
-{
-    <MudText Class="mb-8">No todos found.</MudText>
+<MudButton Variant="@Variant.Text" StartIcon="@Icons.Material.Filled.Add" Hover="true" OnClick="OnAddTodoClicked">New todo</MudButton>
 
-    <MudButton Variant="@Variant.Text" StartIcon="@Icons.Material.Filled.Add" Class="mt-2" OnClick="OnAddTodoClicked">New todo</MudButton>
-}
-else if (todos is null)
-{
-    <MudProgressCircular Color="Color.Default" Indeterminate="true" />
-}
-else
-{
-    <MudButton Variant="@Variant.Text" StartIcon="@Icons.Material.Filled.Add" OnClick="OnAddTodoClicked">New todo</MudButton>
-
-    <MudTable Items="todos" Hover="true" SortLabel="Sort By" Elevation="0">
-        <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<Todo, object>(x=>x.IsCompleted!)">Is Completed</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<Todo, object>(x=>x.Title)">Title</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<Todo, object>(x=>x.Created)">Created at</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<Todo, object>(x=>x.Completed!)">Completed at</MudTableSortLabel></MudTh>
-            <MudTh></MudTh>
-        </HeaderContent>
-        <RowTemplate Context="todo">
-            <MudTd DataLabel="Is Completed">
-                <MudCheckBox Checked="todo.IsCompleted" CheckedChanged="async (bool? value) => await OnTodoCheckedChanged(todo)" ReadOnly="todo.IsCompleted" />
-            </MudTd>
-            <MudTd DataLabel="Title">@todo.Title</MudTd>
-            <MudTd DataLabel="Created at">@todo.Created.ToLocalTime().ToString("g")</MudTd>
-            <MudTd DataLabel="Completed at">@(todo.Completed is null ? null : todo.Completed.GetValueOrDefault().ToLocalTime().ToString("g"))</MudTd>
-            <MudTd>
-                <MudButton Variant="@Variant.Text" StartIcon="@Icons.Material.Filled.Delete" OnClick="async () => await OnDeleteTodoClicked(todo)"></MudButton>
-            </MudTd>
-        </RowTemplate>
-        <PagerContent>
-            <MudTablePager PageSizeOptions="new int[]{50, 100}" />
-        </PagerContent>
-    </MudTable>
-}
+<MudTable @ref="table" ServerData="ServerReload" Hover="true" SortLabel="Sort By" Elevation="0" Loading="@loading">
+    <ToolBarContent>
+        <MudSpacer />
+        <MudTextField T="string" Value="@searchString" ValueChanged="@(s => OnSearch(s))" Immediate="true" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel T="Todo" SortLabel="@nameof(Todo.IsCompleted)">Is Completed</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="Todo" SortLabel="@nameof(Todo.Title)">Title</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="Todo" SortLabel="@nameof(Todo.Created)">Created at</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel T="Todo" SortLabel="@nameof(Todo.Completed)">Completed at</MudTableSortLabel></MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate Context="todo">
+        <MudTd DataLabel="Is Completed">
+            <MudCheckBox Checked="todo.IsCompleted" CheckedChanged="async (bool? value) => await OnTodoCheckedChanged(todo)" ReadOnly="todo.IsCompleted" />
+        </MudTd>
+        <MudTd DataLabel="Title">@todo.Title</MudTd>
+        <MudTd DataLabel="Created at">@todo.Created.ToLocalTime().ToString("g")</MudTd>
+        <MudTd DataLabel="Completed at">@(todo.Completed is null ? null : todo.Completed.GetValueOrDefault().ToLocalTime().ToString("g"))</MudTd>
+        <MudTd>
+            <MudButton Variant="@Variant.Text" StartIcon="@Icons.Material.Filled.Delete" OnClick="async () => await OnDeleteTodoClicked(todo)"></MudButton>
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new int[]{50, 100}" />
+    </PagerContent>
+</MudTable>
 
 
 @code {
-    private List<Todo>? todos;
-    private bool noTodos;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadTodos();
-    }
-
-    private async Task LoadTodos()
-    {
-        try
-        {
-            todos = (await TodosClient.GetTodosAsync()).ToList();
-        }
-        catch (ApiException exception) when (exception.StatusCode == 204)
-        {
-            todos = new List<Todo>();
-            noTodos = true;
-        }
-        catch
-        {
-            Snackbar.Add("Todos could not be loaded", Severity.Error);
-        }
-    }
+    MudTable<Todo> table = null!;
+    bool loading = false;
+    string? searchString = null;
 
     private async Task OnTodoCheckedChanged(Todo todo)
     {
@@ -97,9 +67,7 @@ else
         if (result.Canceled)
             return;
 
-        todos?.Add((Todo)result.Data);
-
-        noTodos = false;
+        await table.ReloadServerData();
     }
 
     private async Task OnDeleteTodoClicked(Todo todo)
@@ -113,7 +81,7 @@ else
         {
             await TodosClient.DeleteTodoAsync(todo.Id);
 
-            todos?.Remove(todo);
+            await table.ReloadServerData();
 
             Snackbar.Add("Todo removed", Severity.Info);
         }
@@ -121,5 +89,28 @@ else
         {
             Snackbar.Add("Todo was not removed", Severity.Error);
         }
+    }
+
+    private async Task<TableData<Todo>> ServerReload(TableState state)
+    {
+        loading = true;
+
+        try
+        {
+            var result = await TodosClient.GetTodosAsync(state.Page, state.PageSize,
+                searchString, state.SortDirection == MudBlazor.SortDirection.None ? null : state.SortLabel, state.SortDirection == MudBlazor.SortDirection.None ? null : (state.SortDirection == MudBlazor.SortDirection.Ascending ? BlazorApp1.Client.SortDirection.Asc : BlazorApp1.Client.SortDirection.Desc));
+
+            return new TableData<Todo>() { TotalItems = result.TotalItems, Items = result.Items };
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+
+    private async Task OnSearch(string text)
+    {
+        searchString = text;
+        await table.ReloadServerData();
     }
 }

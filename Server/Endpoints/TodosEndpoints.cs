@@ -9,6 +9,9 @@ using BlazorApp1.Server.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
+using static System.Net.Mime.MediaTypeNames;
+using static MudBlazor.CategoryTypes;
+
 namespace BlazorApp1.Server.Endpoints;
 
 public static class TodosEndpoints
@@ -33,7 +36,7 @@ public static class TodosEndpoints
         routeGroup
             .MapGet("/", GetTodos)
             .WithName("Todos_GetTodos")
-            .Produces<IEnumerable<Todo>>(StatusCodes.Status200OK);
+            .Produces<ItemsResult<Todo>>(StatusCodes.Status200OK);
 
         routeGroup
             .MapGet("/{id}", GetTodoById)
@@ -65,16 +68,47 @@ public static class TodosEndpoints
             .Produces(StatusCodes.Status404NotFound);
     }
 
-    public static async Task<IResult> GetTodos(DataContext context, CancellationToken cancellationToken)
+    public static async Task<IResult> GetTodos(DataContext context, int page = 0, int pageSize = 10, string? searchString = null, string? sortBy = null, SortDirection? sortDirection = null,
+        CancellationToken cancellationToken = default)
     {
-        var todos = await context.Todos.ToArrayAsync(cancellationToken);
-
-        if (!todos.Any())
+        if (pageSize < 0)
         {
-            return TypedResults.NoContent();
+            throw new Exception("Page Size cannot be negative.");
         }
 
-        return TypedResults.Ok(todos);
+        if (pageSize > 100)
+        {
+            throw new Exception("Page Size must not be greater than 100.");
+        }
+
+        IQueryable<Todo> result = context.Todos
+                  .AsNoTracking()
+                  .AsQueryable();
+
+        if (searchString is not null)
+        {
+            result = result.Where(p =>
+                p.Title.ToLower().Contains(searchString.ToLower()));
+        }
+
+        var totalCount = await result.CountAsync(cancellationToken);
+
+        if (sortBy is not null)
+        {
+            result = result.OrderBy(sortBy, sortDirection);
+        }
+        else
+        {
+            result = result.OrderBy(x => x.Created);
+        }
+
+        var todos = await result
+            .AsSingleQuery()
+            .Skip(page * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return TypedResults.Ok(new ItemsResult<Todo>(todos, totalCount));
     }
 
     public static async Task<IResult> GetTodoById(Guid id, DataContext context, CancellationToken cancellationToken)
