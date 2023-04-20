@@ -2,8 +2,6 @@
 
 using Asp.Versioning.Builder;
 
-using Microsoft.AspNetCore.Http.HttpResults;
-
 namespace BlazorApp1.Server.Endpoints;
 
 public static class SampleDataEndpoints
