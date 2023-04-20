@@ -1,4 +1,4 @@
-﻿namespace BlazorApp1.Server.Hubs;
+﻿namespace BlazorApp1.Shared;
 
 public interface IChatClient
 {

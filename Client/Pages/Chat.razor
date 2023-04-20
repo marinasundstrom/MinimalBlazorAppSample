@@ -25,7 +25,6 @@
 </MudList>
 
 @code {
-    private HubConnection? hubConnection;
     private List<string> messages = new List<string>();
 
     [Required]
@@ -35,38 +34,21 @@
     [MaxLength(50)]
     public string? Message { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        hubConnection = new HubConnectionBuilder()
-            .WithUrl(Navigation.ToAbsoluteUri("/chathub"))
-            .Build();
-
-        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
-        {
-            var encodedMsg = $"{user}: {message}";
-            messages.Add(encodedMsg);
-            StateHasChanged();
-        });
-
-        await hubConnection.StartAsync();
-    }
-
     private async Task Send()
     {
         if (hubConnection is not null)
         {
-            await hubConnection.SendAsync("SendMessage", User, Message);
+            await hubProxy.SendMessage(User!, Message!);
         }
     }
 
-    public bool IsConnected =>
-        hubConnection?.State == HubConnectionState.Connected;
-
-    public async ValueTask DisposeAsync()
+    public Task ReceiveMessage(string user, string message) 
     {
-        if (hubConnection is not null)
-        {
-            await hubConnection.DisposeAsync();
-        }
+        var encodedMsg = $"{user}: {message}";
+        messages.Add(encodedMsg);
+        
+        StateHasChanged();
+
+        return Task.CompletedTask;
     }
 }

@@ -23,6 +23,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.4" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.4" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client.SourceGenerator" Version="7.0.0-preview.7.22376.6" />
 		<PackageReference Include="MudBlazor" Version="6.1.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.DataAnnotations.Validation" Version="3.2.0-rc1.20223.4" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.4" />
@@ -41,10 +42,8 @@
 		</PackageReference>
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Remove="Todos\" />
+    <ItemGroup>
+        <ProjectReference Include="..\Shared\BlazorApp1.Shared.csproj" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Todos\" />
-	</ItemGroup>
+
 </Project>

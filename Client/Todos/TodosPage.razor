@@ -102,7 +102,7 @@
 
             return new TableData<Todo>() { TotalItems = result.TotalItems, Items = result.Items };
         }
-        catch(ApiException exc)
+        catch(ApiException)
         {
             Snackbar.Add("Failed to load todos.", Severity.Error);
 
