@@ -1,7 +1,7 @@
 ﻿@inject ITodosClient TodosClient
 @inject ISnackbar Snackbar
 
-<EditForm Model="@this" OnValidSubmit="Submit">
+<EditForm Model="@this" OnValidSubmit="async () => await submitButton.InvokeHandler(Submit)">
     <DataAnnotationsValidator />
 
     <MudDialog>
@@ -10,13 +10,15 @@
         </DialogContent>
         <DialogActions>
             <MudButton OnClick="Cancel">Cancel</MudButton>
-            <MudButton ButtonType="ButtonType.Submit" Color="Color.Primary">Add</MudButton>
+            <MudLoadingButton @ref="submitButton" ButtonType="ButtonType.Submit" Color="Color.Primary" Text="Add"></MudLoadingButton>
         </DialogActions>
     </MudDialog>
 </EditForm>
 
 
 @code {
+    MudLoadingButton submitButton = default!;
+
     [Parameter]
     [Required]
     public string Title { get; set; } = default!;
@@ -25,8 +27,14 @@
 
     async Task Submit()
     {
+        #if DEBUG
+        await Task.Delay(1000);
+        #endif
+
         try
         { 
+            //throw new Exception();
+
             var todo = await TodosClient.AddTodoAsync(new AddTodoRequest()
             {
                 Title = Title
