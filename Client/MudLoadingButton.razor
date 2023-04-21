@@ -24,9 +24,9 @@
         {
             <MudIcon Class="ms-n1" Size="Size.Small" Icon="@Icon" />
         }
-        if(Text is not null) 
+        if(ChildContent is not null) 
         {
-            <MudText Class="@(Icon is not null ? "ms-2" : string.Empty)">@Text</MudText>
+            <MudText Class="@(Icon is not null ? "ms-2" : string.Empty)">@ChildContent</MudText>
         }
     }
 </MudButton>
@@ -48,8 +48,7 @@
     public EventCallback OnClick { get; set; } = default!;
 
     [Parameter]
-    [EditorRequired]
-    public string Text { get; set; } = default!;
+    public RenderFragment ChildContent { get; set; } = default!;
 
     [Parameter]
     public string? LoadingText { get; set; }

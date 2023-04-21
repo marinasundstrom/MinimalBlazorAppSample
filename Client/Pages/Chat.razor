@@ -7,14 +7,14 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true">Chat</MudText>
 
-<EditForm Model="@this" OnValidSubmit="Send">
+<EditForm Model="@this" OnValidSubmit="async () => await sendButton.InvokeHandler(Send)">
     <DataAnnotationsValidator />
 
     <MudTextField Label="User" Variant="@Variant.Outlined" Class="mb-2" @bind-Value="User" For="() => User" />
 
     <MudTextField Label="Message" Variant="@Variant.Outlined" Class="mb-2" @bind-Value="Message" For="() => Message" Lines="3" />
 
-    <MudButton ButtonType="@ButtonType.Submit" Variant="@Variant.Text" StartIcon="@Icons.Material.Filled.Send" Disabled="@(!IsConnected)">Send</MudButton>
+    <MudLoadingButton @ref="sendButton" ButtonType="@ButtonType.Submit" Variant="@Variant.Filled" Icon="@Icons.Material.Filled.Send" Disabled="@(!IsConnected)">Send</MudLoadingButton>
 </EditForm>
 
 <MudList>
@@ -25,6 +25,8 @@
 </MudList>
 
 @code {
+    MudLoadingButton sendButton = default!;
+
     private List<string> messages = new List<string>();
 
     [Required]
