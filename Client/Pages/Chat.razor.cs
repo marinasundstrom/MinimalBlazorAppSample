@@ -2,6 +2,8 @@ using BlazorApp1.Shared;
 
 using Microsoft.AspNetCore.SignalR.Client;
 
+using MudBlazor;
+
 namespace BlazorApp1.Client.Pages;
 
 public partial class Chat : IChatClient
@@ -14,9 +16,18 @@ public partial class Chat : IChatClient
         hubConnection = new HubConnectionBuilder()
             .WithUrl(Navigation.ToAbsoluteUri("/chathub"))
             .Build();
+
         hubProxy = hubConnection.ServerProxy<IChatHub>();
         _ = hubConnection.ClientRegistration<IChatClient>(this);
-        await hubConnection.StartAsync();
+
+        try
+        {
+            await hubConnection.StartAsync();
+        }
+        catch
+        {
+            Snackbar.Add("Could not connect", Severity.Error);
+        }
     }
 
     public bool IsConnected =>

@@ -52,9 +52,18 @@
             todo.IsCompleted = true;
             todo.Completed = updatedTodo.Completed;
         }
+        catch(ApiException)
+        {
+            Snackbar.Add("API exception", Severity.Error);
+        }
+        catch(HttpRequestException exc)
+            when (exc.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+        {
+            Snackbar.Add("Internal server errors", Severity.Error);
+        }
         catch
         {
-            Snackbar.Add("Todo could not be updated", Severity.Error);
+            Snackbar.Add("Unknown error has occurred", Severity.Error);
         }
     }
 
@@ -85,9 +94,18 @@
 
             Snackbar.Add("Todo removed", Severity.Info);
         }
+        catch(ApiException)
+        {
+            Snackbar.Add("API exception", Severity.Error);
+        }
+        catch(HttpRequestException exc)
+            when (exc.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+        {
+            Snackbar.Add("Internal server errors", Severity.Error);
+        }
         catch
         {
-            Snackbar.Add("Todo was not removed", Severity.Error);
+            Snackbar.Add("Unknown error has occurred", Severity.Error);
         }
     }
 
@@ -104,7 +122,20 @@
         }
         catch(ApiException)
         {
-            Snackbar.Add("Failed to load todos.", Severity.Error);
+            Snackbar.Add("API exception", Severity.Error);
+
+            return new TableData<Todo>();
+        }
+        catch(HttpRequestException exc)
+            when (exc.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+        {
+            Snackbar.Add("Internal server errors", Severity.Error);
+
+            return new TableData<Todo>();
+        }
+        catch
+        {
+            Snackbar.Add("Unknown error has occurred", Severity.Error);
 
             return new TableData<Todo>();
         }

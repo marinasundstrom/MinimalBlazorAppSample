@@ -1,5 +1,6 @@
 ﻿@page "/fetchdata"
 @inject ISampleDataClient SampleDataClient
+@inject ISnackbar Snackbar
 
 <PageTitle>Weather forecast</PageTitle>
 
@@ -37,6 +38,22 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await SampleDataClient.GetForecastAsync(DateTime.Now);
+        try 
+        {
+            forecasts = await SampleDataClient.GetForecastAsync(DateTime.Now);
+        }
+        catch(ApiException)
+        {
+            Snackbar.Add("API exception", Severity.Error);
+        }
+        catch(HttpRequestException exc)
+            when (exc.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+        {
+            Snackbar.Add("Internal server errors", Severity.Error);
+        }
+        catch
+        {
+            Snackbar.Add("Unknown error has occurred", Severity.Error);
+        }
     }
 }
