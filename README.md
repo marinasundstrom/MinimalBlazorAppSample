@@ -4,7 +4,7 @@
 
 ## Features
 
-### Fronten
+### Frontend
 * Blazor - MudBlazor UI
 * Web API clients - Generated from Open API
 * SignalR client - Generated with Source Generator
