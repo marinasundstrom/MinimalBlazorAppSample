@@ -2,6 +2,8 @@
 
 using Asp.Versioning.Builder;
 
+using static Microsoft.AspNetCore.Http.TypedResults;
+
 namespace BlazorApp1.Server.Endpoints;
 
 public static class SampleDataEndpoints
@@ -43,7 +45,7 @@ public static class SampleDataEndpoints
             Summary = Summaries[Random.Shared.Next(Summaries.Length)]
         }).ToArray();
 
-        return TypedResults.Ok(forecasts);
+        return Ok(forecasts);
     }
 
     public class WeatherForecast

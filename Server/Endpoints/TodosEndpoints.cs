@@ -6,11 +6,9 @@ using Asp.Versioning.Builder;
 using BlazorApp1.Server.Data;
 using BlazorApp1.Server.Models;
 
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
-using static System.Net.Mime.MediaTypeNames;
-using static MudBlazor.CategoryTypes;
+using static Microsoft.AspNetCore.Http.TypedResults;
 
 namespace BlazorApp1.Server.Endpoints;
 
@@ -108,7 +106,7 @@ public static class TodosEndpoints
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        return TypedResults.Ok(new ItemsResult<Todo>(todos, totalCount));
+        return Ok(new ItemsResult<Todo>(todos, totalCount));
     }
 
     public static async Task<IResult> GetTodoById(Guid id, DataContext context, CancellationToken cancellationToken)
@@ -117,10 +115,10 @@ public static class TodosEndpoints
 
         if (todo is null)
         {
-            return TypedResults.NotFound();
+            return NotFound();
         }
 
-        return TypedResults.Ok(todo);
+        return Ok(todo);
     }
 
     public static async Task<IResult> AddTodo(AddTodoRequest request, DataContext context, CancellationToken cancellationToken)
@@ -131,7 +129,7 @@ public static class TodosEndpoints
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return TypedResults.Created($"/v1/Todos/{todo.Id}", todo);
+        return Created($"/v1/Todos/{todo.Id}", todo);
     }
 
     public static async Task<IResult> UpdateTodo(Guid id, UpdateTodoRequest request, DataContext context, CancellationToken cancellationToken)
@@ -140,14 +138,14 @@ public static class TodosEndpoints
 
         if (todo is null)
         {
-            return TypedResults.NotFound();
+            return NotFound();
         }
 
         todo.Title = request.Title;
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return TypedResults.Ok(todo);
+        return Ok(todo);
     }
 
     public static async Task<IResult> MarkTodoAsComplete(Guid id, DataContext context, CancellationToken cancellationToken)
@@ -156,14 +154,14 @@ public static class TodosEndpoints
 
         if (todo is null)
         {
-            return TypedResults.NotFound();
+            return NotFound();
         }
 
         todo.Complete();
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return TypedResults.Ok(todo);
+        return Ok(todo);
     }
 
     public static async Task<IResult> DeleteTodo(Guid id, DataContext context, CancellationToken cancellationToken)
@@ -174,10 +172,10 @@ public static class TodosEndpoints
 
         if (removed == 0)
         {
-            return Results.NotFound();
+            return NotFound();
         }
 
-        return TypedResults.Ok();
+        return Ok();
     }
 
     public sealed record AddTodoRequest(string Title);
