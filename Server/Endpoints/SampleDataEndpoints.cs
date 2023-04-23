@@ -2,6 +2,8 @@
 
 using Asp.Versioning.Builder;
 
+using Microsoft.AspNetCore.Http.HttpResults;
+
 using static Microsoft.AspNetCore.Http.TypedResults;
 
 namespace BlazorApp1.Server.Endpoints;
@@ -36,7 +38,7 @@ public static class SampleDataEndpoints
             .Produces<IEnumerable<WeatherForecast>>(StatusCodes.Status200OK);
     }
 
-    public static IResult GetForecast(DateTime startDate)
+    public static Ok<WeatherForecast[]> GetForecast(DateTime startDate)
     {
         var forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {

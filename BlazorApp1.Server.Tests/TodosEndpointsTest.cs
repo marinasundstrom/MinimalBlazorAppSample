@@ -22,14 +22,9 @@ public class TodosEndpointsTest
 
         // Act
 
-        var okResult = (Created<Todo>)await TodosEndpoints.AddTodo(request, context, default);
+        var result = await TodosEndpoints.AddTodo(request, context, default);
 
         //Assert
-        okResult.StatusCode
-            .Should().Be(StatusCodes.Status201Created);
-
-        var todo = okResult.Value;
-
-        todo.Should().NotBeNull();
+        result.Result.Should().BeOfType<Created<Todo>>();
     }
 }

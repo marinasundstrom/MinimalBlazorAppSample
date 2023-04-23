@@ -6,6 +6,7 @@ using Asp.Versioning.Builder;
 using BlazorApp1.Server.Data;
 using BlazorApp1.Server.Models;
 
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 using static Microsoft.AspNetCore.Http.TypedResults;
@@ -66,7 +67,7 @@ public static class TodosEndpoints
             .Produces(StatusCodes.Status404NotFound);
     }
 
-    public static async Task<IResult> GetTodos(DataContext context, int page = 0, int pageSize = 10, string? searchString = null, string? sortBy = null, SortDirection? sortDirection = null,
+    public static async Task<Results<Ok<ItemsResult<Todo>>, NotFound>> GetTodos(DataContext context, int page = 0, int pageSize = 10, string? searchString = null, string? sortBy = null, SortDirection? sortDirection = null,
         CancellationToken cancellationToken = default)
     {
         if (pageSize < 0)
@@ -109,7 +110,7 @@ public static class TodosEndpoints
         return Ok(new ItemsResult<Todo>(todos, totalCount));
     }
 
-    public static async Task<IResult> GetTodoById(Guid id, DataContext context, CancellationToken cancellationToken)
+    public static async Task<Results<Ok<Todo>, NotFound>> GetTodoById(Guid id, DataContext context, CancellationToken cancellationToken)
     {
         var todo = await context.Todos.FirstOrDefaultAsync(todo => todo.Id == id, cancellationToken);
 
@@ -121,7 +122,7 @@ public static class TodosEndpoints
         return Ok(todo);
     }
 
-    public static async Task<IResult> AddTodo(AddTodoRequest request, DataContext context, CancellationToken cancellationToken)
+    public static async Task<Results<Created<Todo>, BadRequest>> AddTodo(AddTodoRequest request, DataContext context, CancellationToken cancellationToken)
     {
         var todo = new Todo(request.Title);
 
@@ -132,7 +133,7 @@ public static class TodosEndpoints
         return Created($"/v1/Todos/{todo.Id}", todo);
     }
 
-    public static async Task<IResult> UpdateTodo(Guid id, UpdateTodoRequest request, DataContext context, CancellationToken cancellationToken)
+    public static async Task<Results<Ok<Todo>, NotFound>> UpdateTodo(Guid id, UpdateTodoRequest request, DataContext context, CancellationToken cancellationToken)
     {
         var todo = await context.Todos.FirstOrDefaultAsync(todo => todo.Id == id, cancellationToken);
 
@@ -148,7 +149,7 @@ public static class TodosEndpoints
         return Ok(todo);
     }
 
-    public static async Task<IResult> MarkTodoAsComplete(Guid id, DataContext context, CancellationToken cancellationToken)
+    public static async Task<Results<Ok<Todo>, NotFound>> MarkTodoAsComplete(Guid id, DataContext context, CancellationToken cancellationToken)
     {
         var todo = await context.Todos.FirstOrDefaultAsync(todo => todo.Id == id, cancellationToken);
 
@@ -164,7 +165,7 @@ public static class TodosEndpoints
         return Ok(todo);
     }
 
-    public static async Task<IResult> DeleteTodo(Guid id, DataContext context, CancellationToken cancellationToken)
+    public static async Task<Results<NoContent, NotFound>> DeleteTodo(Guid id, DataContext context, CancellationToken cancellationToken)
     {
         var removed = await context.Todos
             .Where(todo => todo.Id == id)
@@ -175,7 +176,7 @@ public static class TodosEndpoints
             return NotFound();
         }
 
-        return Ok();
+        return NoContent();
     }
 
     public sealed record AddTodoRequest(string Title);

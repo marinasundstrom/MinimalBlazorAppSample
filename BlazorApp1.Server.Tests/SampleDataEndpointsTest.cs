@@ -16,11 +16,12 @@ public class SampleDataEndpointsTest
         DateTime startDate = DateTime.Now;
 
         // Act
-        var okResult = (Ok<Endpoints.SampleDataEndpoints.WeatherForecast[]>)SampleDataEndpoints.GetForecast(startDate);
+        var result = SampleDataEndpoints.GetForecast(startDate);
 
         //Assert
-        okResult.StatusCode
-            .Should().Be(StatusCodes.Status200OK);
+        result.Should().BeOfType<Ok<Endpoints.SampleDataEndpoints.WeatherForecast[]>>();
+
+        var okResult = result as Ok<Endpoints.SampleDataEndpoints.WeatherForecast[]>;
 
         var weatherForecast = okResult.Value;
 
