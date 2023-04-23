@@ -51,12 +51,7 @@ builder.Services.AddApiVersioning(options =>
 
 // Register the Swagger services
 
-var apiVersionDescriptions = new[] {
-            (ApiVersion: new ApiVersion(1, 0), foo: 1),
-            (ApiVersion: new ApiVersion(2, 0), foo: 1)
-        };
-
-foreach (var description in apiVersionDescriptions)
+foreach (var description in ApiVersions.Versions)
 {
     builder.Services.AddOpenApiDocument(config =>
     {
@@ -155,10 +150,9 @@ using (var scope = app.Services.CreateScope())
 
 await app.RunAsync();
 
-static string GetApiVersion((ApiVersion ApiVersion, int foo) description)
+static string GetApiVersion(ApiVersion version)
 {
-    var apiVersion = description.ApiVersion;
-    return (apiVersion.MinorVersion == 0
-        ? apiVersion.MajorVersion.ToString()
-        : apiVersion.ToString())!;
+    return (version.MinorVersion == 0
+        ? version.MajorVersion.ToString()
+        : version.ToString())!;
 }

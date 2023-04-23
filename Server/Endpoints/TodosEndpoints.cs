@@ -9,6 +9,7 @@ using BlazorApp1.Server.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
+using static BlazorApp1.Server.ApiVersions;
 using static Microsoft.AspNetCore.Http.TypedResults;
 
 namespace BlazorApp1.Server.Endpoints;
@@ -29,7 +30,8 @@ public static class TodosEndpoints
         var routeGroup = builder
             .MapGroup("/v{version:apiVersion}/Todos")
             .WithTags("Todos")
-            .HasApiVersion(1, 0)
+            .HasApiVersion(V1)
+            .HasApiVersion(V2)
             .WithOpenApi();
 
         routeGroup
