@@ -116,12 +116,7 @@ public static class TodosEndpoints
     {
         var todo = await context.Todos.FirstOrDefaultAsync(todo => todo.Id == id, cancellationToken);
 
-        if (todo is null)
-        {
-            return NotFound();
-        }
-
-        return Ok(todo);
+        return todo is not null ? Ok(todo) : NotFound();
     }
 
     public static async Task<Results<Created<Todo>, BadRequest>> AddTodo(AddTodoRequest request, DataContext context, CancellationToken cancellationToken)
@@ -167,18 +162,13 @@ public static class TodosEndpoints
         return Ok(todo);
     }
 
-    public static async Task<Results<NoContent, NotFound>> DeleteTodo(Guid id, DataContext context, CancellationToken cancellationToken)
+    public static async Task<Results<Ok, NotFound>> DeleteTodo(Guid id, DataContext context, CancellationToken cancellationToken)
     {
         var removed = await context.Todos
             .Where(todo => todo.Id == id)
             .ExecuteDeleteAsync(cancellationToken);
 
-        if (removed == 0)
-        {
-            return NotFound();
-        }
-
-        return NoContent();
+        return removed >= 1 ? Ok() : NotFound();
     }
 
     public sealed record AddTodoRequest(string Title);

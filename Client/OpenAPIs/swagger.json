@@ -256,13 +256,10 @@
           }
         ],
         "responses": {
-          "204": {
+          "200": {
             "description": ""
           },
           "404": {
-            "description": ""
-          },
-          "200": {
             "description": ""
           }
         }
