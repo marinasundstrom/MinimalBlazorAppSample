@@ -27,6 +27,7 @@
 		<PackageReference Include="MudBlazor" Version="6.1.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.DataAnnotations.Validation" Version="3.2.0-rc1.20223.4" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.4" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.0-preview.3.23177.8" />
 	</ItemGroup>
 
 	<ItemGroup>
