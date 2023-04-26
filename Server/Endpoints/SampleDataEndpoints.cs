@@ -18,7 +18,8 @@ public static class SampleDataEndpoints
 
     public static WebApplication MapSampleDataEndpoints(this WebApplication app)
     {
-        var subscriptions = app.NewVersionedApi("SampleData");
+        var subscriptions = app.NewVersionedApi("SampleData")
+            .ReportApiVersions();
 
         MapVersion1(subscriptions);
 
