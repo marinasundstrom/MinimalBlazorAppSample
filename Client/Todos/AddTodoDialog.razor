@@ -1,4 +1,5 @@
-﻿@inject ITodosClient TodosClient
+﻿@implements IDisposable
+@inject ITodosClient TodosClient
 @inject ISnackbar Snackbar
 
 <EditForm Model="@this" OnValidSubmit="async () => await submitButton.InvokeHandler(Submit)">
@@ -18,6 +19,7 @@
 
 @code {
     MudLoadingButton submitButton = default!;
+    CancellationTokenSource cts = new ();
 
     [Parameter]
     [Required]
@@ -38,7 +40,7 @@
             var todo = await TodosClient.AddTodoAsync(new AddTodoRequest()
             {
                 Title = Title
-            });
+            }, cts.Token);
 
             MudDialog.Close(DialogResult.Ok(todo));
         }
@@ -51,6 +53,10 @@
         {
             Snackbar.Add("Internal server errors", Severity.Error);
         }
+        catch(TaskCanceledException)
+        {
+            
+        }
         catch
         {
             Snackbar.Add("Unknown error has occurred", Severity.Error);
@@ -58,4 +64,10 @@
     }
 
     void Cancel() => MudDialog.Cancel();
+
+    public void Dispose() 
+    {
+        cts.Cancel();
+        cts.Dispose();
+    }
 }

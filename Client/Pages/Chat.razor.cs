@@ -10,6 +10,7 @@ public partial class Chat : IChatClient
 {
     private IChatHub hubProxy = default!;
     private HubConnection? hubConnection;
+    readonly CancellationTokenSource cts = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -22,7 +23,11 @@ public partial class Chat : IChatClient
 
         try
         {
-            await hubConnection.StartAsync();
+            await hubConnection.StartAsync(cts.Token);
+        }
+        catch (TaskCanceledException)
+        {
+
         }
         catch
         {
@@ -39,5 +44,8 @@ public partial class Chat : IChatClient
         {
             await hubConnection.DisposeAsync();
         }
+
+        cts.Cancel();
+        cts.Dispose();
     }
 }

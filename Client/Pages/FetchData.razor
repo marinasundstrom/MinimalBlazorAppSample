@@ -1,4 +1,5 @@
 ﻿@page "/fetchdata"
+@implements IDisposable
 @inject ISampleDataClient SampleDataClient
 @inject ISnackbar Snackbar
 
@@ -35,12 +36,13 @@ else
 
 @code {
     private IEnumerable<WeatherForecast>? forecasts;
+    CancellationTokenSource cts = new ();
 
     protected override async Task OnInitializedAsync()
     {
         try 
         {
-            forecasts = await SampleDataClient.GetForecastAsync(DateTime.Now);
+            forecasts = await SampleDataClient.GetForecastAsync(DateTime.Now, cts.Token);
         }
         catch(ApiException)
         {
@@ -51,9 +53,19 @@ else
         {
             Snackbar.Add("Internal server errors", Severity.Error);
         }
+        catch(TaskCanceledException)
+        {
+            
+        }
         catch
         {
             Snackbar.Add("Unknown error has occurred", Severity.Error);
         }
+    }
+
+    public void Dispose() 
+    {
+        cts.Cancel();
+        cts.Dispose();
     }
 }
