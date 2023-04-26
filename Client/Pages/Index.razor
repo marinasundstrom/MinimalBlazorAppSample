@@ -1,6 +1,7 @@
 ﻿@page "/"
+@inject IStringLocalizer<Index> T
 
-<PageTitle>Index</PageTitle>
+<PageTitle>@T["PageTitle"]</PageTitle>
 
 <MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
 <MudText Class="mb-8">Welcome to your new app, powered by MudBlazor!</MudText>
