@@ -1,9 +1,12 @@
+using System.Globalization;
+
 using BlazorApp1.Client;
 
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 using Microsoft.Extensions.Localization;
+using Microsoft.JSInterop;
 
 using MudBlazor.Services;
 
@@ -28,4 +31,28 @@ builder.Services.AddHttpClient<ISampleDataClient>(HttpClientName)
 builder.Services.AddHttpClient<ITodosClient>(HttpClientName)
 .AddTypedClient<ITodosClient>((http, sp) => new TodosClient(http));
 
-await builder.Build().RunAsync();
+var app = builder.Build();
+
+await Localize(app.Services);
+
+await app.RunAsync();
+
+static async Task Localize(IServiceProvider serviceProvider)
+{
+    CultureInfo culture;
+    var js = serviceProvider.GetRequiredService<IJSRuntime>();
+    var result = await js.InvokeAsync<string>("blazorCulture.get");
+
+    if (result != null)
+    {
+        culture = new CultureInfo(result);
+    }
+    else
+    {
+        culture = new CultureInfo("en-US");
+        await js.InvokeVoidAsync("blazorCulture.set", "en-US");
+    }
+
+    CultureInfo.DefaultThreadCurrentCulture = culture;
+    CultureInfo.DefaultThreadCurrentUICulture = culture;
+}

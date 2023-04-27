@@ -4,14 +4,13 @@
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
-<PageTitle>Todos</PageTitle>
+<AppPageTitle>Todos</AppPageTitle>
 
 <MudText Typo="Typo.h3" GutterBottom="true">Todos</MudText>
 
-<MudButton Variant="@Variant.Text" StartIcon="@Icons.Material.Filled.Add" Hover="true" OnClick="OnAddTodoClicked">New todo</MudButton>
-
 <MudTable @ref="table" ServerData="ServerReload" Hover="true" SortLabel="Sort By" Elevation="0" Loading="@loading">
     <ToolBarContent>
+        <MudButton Variant="@Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Hover="true" OnClick="OnAddTodoClicked">New todo</MudButton>
         <MudSpacer />
         <MudTextField T="string" Value="@searchString" ValueChanged="@(s => OnSearch(s))" Immediate="true" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>

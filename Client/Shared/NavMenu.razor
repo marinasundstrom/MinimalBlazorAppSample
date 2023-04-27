@@ -1,7 +1,9 @@
-﻿<MudNavMenu>
-    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-    <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
-    <MudNavLink Href="fetchdata" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Fetch data</MudNavLink>
-    <MudNavLink Href="chat" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ChatBubble">Chat</MudNavLink>
-    <MudNavLink Href="todos" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Todos</MudNavLink>
+﻿@inject IStringLocalizer<NavMenu> T
+
+<MudNavMenu>
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">@T["Home"]</MudNavLink>
+    <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">@T["Counter"]</MudNavLink>
+    <MudNavLink Href="fetchdata" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">@T["FetchData"]</MudNavLink>
+    <MudNavLink Href="chat" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ChatBubble">@T["Chat"]</MudNavLink>
+    <MudNavLink Href="todos" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">@T["Todos"]</MudNavLink>
 </MudNavMenu>

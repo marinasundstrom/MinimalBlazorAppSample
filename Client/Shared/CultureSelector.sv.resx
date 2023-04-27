@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
 	<resheader name="resmimetype">
 		<value>text/microsoft-resx</value>
@@ -12,19 +12,25 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="PageTitle">
-        <value>Counter</value>
+    <data name="ChangeLocale">
+		<value>Ändra språk</value>
+	</data>
+    <data name="Locale">
+        <value>Språk</value>
     </data>
-    <data name="CurrentCount">
-        <value>Current count: {0}</value>
+    <data name="SelectYourLocale">
+        <value>Välj ditt språk</value>
     </data>
-    <data name="Processing">
-        <value>Processing...</value>
-    </data>
-    <data name="ClickMe">
-        <value>Click me</value>
-    </data>
-    <data name="TryAgain">
-        <value>Försök igen</value>
-    </data>
+    <data name="Ok">
+		<value>Välj</value>
+	</data>
+    <data name="Cancel">
+		<value>Avbryt</value>
+	</data>
+    <data name="en-US">
+		<value>English (United States)</value>
+	</data>
+	<data name="sv-SE">
+		<value>svenska (Sverige)</value>
+	</data>
 </root>

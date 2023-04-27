@@ -13,16 +13,16 @@
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
 	<data name="PageTitle">
-        <value>Counter</value>
+        <value>Räknare</value>
     </data>
     <data name="CurrentCount">
-        <value>Current count: {0}</value>
+        <value>Nuvarande tal: {0}</value>
     </data>
     <data name="Processing">
-        <value>Processing...</value>
+        <value>Behandlar...</value>
     </data>
     <data name="ClickMe">
-        <value>Click me</value>
+        <value>Klicka här</value>
     </data>
     <data name="TryAgain">
         <value>Försök igen</value>

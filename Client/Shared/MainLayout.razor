@@ -1,6 +1,8 @@
 ﻿@inherits LayoutComponentBase
+@inject IDialogService DialogService
+@inject IStringLocalizer<MainLayout> T
 
-<MudThemeProvider Theme="currentTheme" />
+<MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode"/>
 <MudDialogProvider />
 <MudSnackbarProvider  />
 
@@ -8,17 +10,31 @@
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudSpacer />
+        <MudMenu Dense="true" Color="Color.Inherit" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopCenter"
+             PopoverClass="docs-layout-menu-shadow" ListClass="pa-2 docs-menu-list" LockScroll="true">
+            <ActivatorContent>
+                <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" Class="mr-2" />
+            </ActivatorContent>
+            <ChildContent>
+                <MudMenuItem OnClick="ChangeLocale">
+                    <div class="d-flex">
+                        <MudIcon Icon="@Icons.Material.Filled.Language" class="me-2" />
+                        <MudText Style="overflow: hidden; white-space: nowrap;">@T["ChangeLocale"]</MudText>
+                    </div>
+                </MudMenuItem>
+            </ChildContent>
+        </MudMenu>
         <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank" />
         <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor/" Target="_blank" />
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
         <MudDrawerHeader>
-            <MudText Typo="Typo.h6">BlazorApp1</MudText>
+            <MudText Typo="Typo.h6">@T["AppTitle"]</MudText>
         </MudDrawerHeader>
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Large" Class="my-16 pt-16">
+        <MudContainer MaxWidth="MaxWidth.Large" Class="my-16">
             @Body
         </MudContainer>
     </MudMainContent>
@@ -26,10 +42,33 @@
 
 @code {
     bool _drawerOpen = true;
-    MudTheme currentTheme = new MudTheme();
+    private bool _isDarkMode;
+    private MudThemeProvider _mudThemeProvider = default!;
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+            await _mudThemeProvider.WatchSystemPreference(OnSystemPreferenceChanged);
+            StateHasChanged();
+        }
+    }
+    
+    private async Task OnSystemPreferenceChanged(bool newValue)
+    {
+        _isDarkMode = newValue;
+        StateHasChanged();
+    }
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+    }
+
+    async Task ChangeLocale()
+    {
+        var dialogRef = DialogService.Show<CultureSelector>(T["ChangeLocale"]);
+        await dialogRef.Result;
     }
 }
