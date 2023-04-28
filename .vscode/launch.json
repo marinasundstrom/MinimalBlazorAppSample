@@ -25,6 +25,12 @@
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach"
-        }
+        },
+        {
+            "name": "Client Attach (WASM)",
+            "type": "blazorwasm",
+            "request": "attach",
+            "url": "http://localhost:48670"
+          }
     ]
 }
