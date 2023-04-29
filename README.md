@@ -47,3 +47,5 @@ Then, attach the debugger to the browser with the "Client Attach (WASM)" launch 
 
 A debug instance of your selected browser (Chrome or Edge) will then launch.
 
+![Debug Client](/Screenshots/DebugClient.png)
+
