@@ -71,6 +71,9 @@
     [Parameter]
     public Size Size { get; set; } = MudBlazor.Size.Medium;
 
+    [Parameter]
+    public int Timeout { get; set; } = 0;
+
     public void Reset() 
     {
         _error = false;
@@ -84,11 +87,29 @@
     public async Task InvokeHandler(Func<Task> handler)
     {
         _error = false;
-        _processing = true;
+        
+        CancellationTokenSource cts = new ();
+        Task? t = null;
 
         try 
         {
+            if(Timeout > 0) 
+            {
+                t = Task.Delay(Timeout).ContinueWith((task) => { 
+                        _processing = true;
+                        InvokeAsync(StateHasChanged); 
+                    }, cts.Token);
+            }
+            else
+            {
+                _processing = true;
+            }
+
             await handler();
+        }
+        catch(TaskCanceledException)
+        {
+
         }
         catch
         {
@@ -96,6 +117,7 @@
         }
         finally 
         {
+            cts.Cancel();
             _processing = false;
         }
     }
