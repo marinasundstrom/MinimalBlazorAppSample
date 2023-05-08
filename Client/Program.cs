@@ -1,6 +1,7 @@
 using System.Globalization;
 
 using BlazorApp1.Client;
+using BlazorApp1.Client.Extensions;
 
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -30,6 +31,8 @@ builder.Services.AddHttpClient<ISampleDataClient>(HttpClientName)
 
 builder.Services.AddHttpClient<ITodosClient>(HttpClientName)
 .AddTypedClient<ITodosClient>((http, sp) => new TodosClient(http));
+
+builder.Services.AddServices();
 
 var app = builder.Build();
 

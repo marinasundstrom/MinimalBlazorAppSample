@@ -1,0 +1,11 @@
+<MudAppBar Elevation="1">
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
+        OnClick="@(async (e) => await DrawerToggle.InvokeAsync())" />
+    <MudSpacer />
+    <AppBarButtons />
+</MudAppBar>
+
+@code {
+    [Parameter]
+    public EventCallback DrawerToggle { get; set; }
+}

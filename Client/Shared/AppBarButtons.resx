@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <resheader name="resmimetype">
     <value>text/microsoft-resx</value>
@@ -12,8 +12,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AppTitle" xml:space="preserve">
-    <value>My App</value>
+  <data name="ChangeLocale" xml:space="preserve">
+    <value>Change locale</value>
+    <comment/>
+  </data>
+  <data name="SwitchToLightTheme" xml:space="preserve">
+    <value>Switch to Light Theme</value>
+    <comment/>
+  </data>
+  <data name="SwitchToDarkTheme" xml:space="preserve">
+    <value>Switch to Dark Theme</value>
+    <comment/>
+  </data>
+  <data name="SwitchToSystem" xml:space="preserve">
+    <value>Switch to system theme</value>
     <comment/>
   </data>
 </root>

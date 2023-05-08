@@ -6,6 +6,8 @@
 
 Hosted Blazor WebAssembly app - on ASP.NET Core backend.
 
+Contains code from MudBlazor Docs.
+
 ### Frontend
 * Blazor - MudBlazor UI
 * Web API clients - Generated from Open API
