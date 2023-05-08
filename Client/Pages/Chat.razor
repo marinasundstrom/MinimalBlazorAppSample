@@ -19,17 +19,25 @@
     </EditForm>
 </MudPaper>
 
-<MudList>
-    @foreach (var message in messages)
-    {
-        <MudListItem>@message</MudListItem>
-    }
-</MudList>
+@if(messages.Any()) 
+{
+    <MudList>
+        @foreach (var message in messages)
+        {
+            <MudPaper Elevation="25" Class="mt-4">
+                <MudListItem>
+                    <MudText Typo="@Typo.subtitle2" Class="mb-2">@message.User</MudText>
+                    <MudText Typo="@Typo.body1">@message.Text</MudText>
+                </MudListItem>
+            </MudPaper>
+        }
+    </MudList>
+}
 
 @code {
     MudLoadingButton sendButton = default!;
 
-    private List<string> messages = new List<string>();
+    private List<MessageDto> messages = new List<MessageDto>();
 
     [Required]
     public string? User { get; set; }
@@ -48,11 +56,12 @@
 
     public Task ReceiveMessage(string user, string message) 
     {
-        var encodedMsg = $"{user}: {message}";
-        messages.Add(encodedMsg);
+        messages.Add(new MessageDto(user, message));
         
         StateHasChanged();
 
         return Task.CompletedTask;
     }
+
+    public record MessageDto(string User, string Text);
 }
