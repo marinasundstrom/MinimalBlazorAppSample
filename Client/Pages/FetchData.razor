@@ -14,7 +14,7 @@
 }
 else
 {
-    <MudTable Items="forecasts" Striped="true" Hover="true" SortLabel="Sort By" Elevation="0">
+    <MudTable Items="forecasts" Striped="true" Hover="true" SortLabel="Sort By" Elevation="25">
         <HeaderContent>
             <MudTh><MudTableSortLabel InitialDirection="MudBlazor.SortDirection.Ascending" SortBy="new Func<WeatherForecast, object>(x=>x.Date)">Date</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<WeatherForecast, object>(x=>x.TemperatureC)">Temp. (°C)</MudTableSortLabel></MudTh>

@@ -8,7 +8,7 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true">Todos</MudText>
 
-<MudTable @ref="table" ServerData="ServerReload" Hover="true" SortLabel="Sort By" Elevation="0" Loading="@loading">
+<MudTable @ref="table" ServerData="ServerReload" Hover="true" SortLabel="Sort By" Elevation="25" Loading="@loading">
     <ToolBarContent>
         <MudButton Variant="@Variant.Outlined" StartIcon="@Icons.Material.Filled.Add" Hover="true" OnClick="OnAddTodoClicked">New todo</MudButton>
         <MudSpacer />

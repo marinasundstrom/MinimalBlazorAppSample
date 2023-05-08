@@ -8,7 +8,13 @@ namespace BlazorApp1.Client.Themes;
 
 public class Theme
 {
-    public static MudTheme DefaultTheme() => new MudTheme();
+    public static MudTheme DefaultTheme() => new MudTheme() {
+        Palette = new Palette
+        {
+            AppbarBackground = "#137cdf", 
+            Primary = "#4892d7"
+        }
+    };
 
     public static MudTheme LandingPageTheme()
     {

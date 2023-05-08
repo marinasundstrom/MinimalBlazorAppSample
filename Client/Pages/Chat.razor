@@ -7,15 +7,17 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true">Chat</MudText>
 
-<EditForm Model="@this" OnValidSubmit="async () => await sendButton.InvokeHandler(Send)">
-    <DataAnnotationsValidator />
+<MudPaper Elevation="25" Class="pa-4">
+    <EditForm Model="@this" OnValidSubmit="async () => await sendButton.InvokeHandler(Send)">
+        <DataAnnotationsValidator />
 
-    <MudTextField Label="User" Variant="@Variant.Outlined" Class="mb-2" @bind-Value="User" For="() => User" />
+        <MudTextField Label="User" Variant="@Variant.Outlined" Class="mb-2" @bind-Value="User" For="() => User" />
 
-    <MudTextField Label="Message" Variant="@Variant.Outlined" Class="mb-2" @bind-Value="Message" For="() => Message" Lines="3" />
+        <MudTextField Label="Message" Variant="@Variant.Outlined" Class="mb-2" @bind-Value="Message" For="() => Message" Lines="3" />
 
-    <MudLoadingButton @ref="sendButton" ButtonType="@ButtonType.Submit" Variant="@Variant.Filled" Icon="@Icons.Material.Filled.Send" Disabled="@(!IsConnected)">Send</MudLoadingButton>
-</EditForm>
+        <MudLoadingButton @ref="sendButton" ButtonType="@ButtonType.Submit" Variant="@Variant.Filled" Icon="@Icons.Material.Filled.Send" Disabled="@(!IsConnected)">Send</MudLoadingButton>
+    </EditForm>
+</MudPaper>
 
 <MudList>
     @foreach (var message in messages)
