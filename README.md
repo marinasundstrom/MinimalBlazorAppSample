@@ -6,13 +6,14 @@
 
 Hosted Blazor WebAssembly app - on ASP.NET Core backend.
 
-Contains code from MudBlazor Docs.
+Contains code from MudBlazor Docs site project - for handling color theme.
 
 ### Frontend
 * Blazor - MudBlazor UI
 * Web API clients - Generated from Open API
 * SignalR client - Generated with Source Generator
 * Localization
+* Color theme - Light and Dark mode
 
 ### Backend
 * Minimal API endpoints
