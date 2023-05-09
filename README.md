@@ -6,8 +6,6 @@
 
 Hosted Blazor WebAssembly app - on ASP.NET Core backend.
 
-Contains code from MudBlazor Docs site project - for handling color theme.
-
 ### Frontend
 * Blazor - MudBlazor UI
 * Web API clients - Generated from Open API
@@ -52,3 +50,6 @@ A debug instance of your selected browser (Chrome or Edge) will then launch.
 
 ![Debug Client](/Screenshots/DebugClient.png)
 
+## Additional information
+
+This project contains code from MudBlazor Docs site project - for handling color theme.
