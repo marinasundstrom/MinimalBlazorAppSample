@@ -9,18 +9,14 @@ namespace BlazorApp1.Client.Shared
 {
     public partial class MainLayout : LayoutComponentBase, IDisposable
     {
-        [Inject] private LayoutService LayoutService { get; set; } = default!;
+        [Inject] protected LayoutService LayoutService { get; set; } = default!;
 
         private MudThemeProvider _mudThemeProvider = default!;
-
-        bool _drawerOpen = true;
 
         protected override void OnInitialized()
         {
             LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
             base.OnInitialized();
-
-            LayoutService.SetBaseTheme(Theme.DefaultTheme());
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -52,10 +48,5 @@ namespace BlazorApp1.Client.Shared
         }
 
         private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e) => StateHasChanged();
-
-        private void DrawerToggle()
-        {
-            _drawerOpen = !_drawerOpen;
-        }
     }
 }

@@ -1,0 +1,35 @@
+﻿@inherits LayoutComponentBase
+@layout MainLayout
+@using BlazorApp1.Client.Themes
+@inject IStringLocalizer<AppLayout> T
+@inject LayoutService LayoutService
+
+<MudLayout>
+    <AppBar DrawerToggle="@((e) => DrawerToggle())" />
+    <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h6">@T["AppTitle"]</MudText>
+        </MudDrawerHeader>
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="my-16">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code 
+{
+    bool _drawerOpen = true;
+
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    protected override void OnInitialized()
+    {
+        LayoutService.SetBaseTheme(Theme.DefaultTheme());
+    }
+}
