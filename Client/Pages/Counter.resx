@@ -21,6 +21,9 @@
     <data name="Processing">
         <value>Processing...</value>
     </data>
+    <data name="Success">
+        <value>Success</value>
+    </data>
     <data name="ClickMe">
         <value>Click me</value>
     </data>
