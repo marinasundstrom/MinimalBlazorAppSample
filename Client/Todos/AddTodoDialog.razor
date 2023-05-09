@@ -7,7 +7,7 @@
 
     <MudDialog>
         <DialogContent>
-            <MudTextField Label="Title" Lines="3" Variant="@Variant.Outlined" @bind-Value="Title" For="() => Title" HelperText="What is this todo about?" />
+            <MudTextField Label="Title" Lines="3" Variant="@Variant.Outlined" Immediate="true" @bind-Value="Title" For="() => Title" HelperText="What is this todo about?" />
         </DialogContent>
         <DialogActions>
             <MudButton OnClick="Cancel">Cancel</MudButton>

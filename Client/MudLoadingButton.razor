@@ -180,12 +180,6 @@
             return;
         }
         
-        if (EditContext is null && CascadedEditContext is not null)
-        {
-            EditContext = CascadedEditContext;
-            EditContext.OnValidationStateChanged += OnValidationStateChanged;
-        }
-
         if (EditContext is not null)
         {
             if(!EditContext.Validate()) 
@@ -204,15 +198,15 @@
 
     private EditContext? EditContext { get; set; }
 
-    public override async Task SetParametersAsync(ParameterView parameters)
-    {        
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
         if (EditContext is null && CascadedEditContext is not null)
         {
             EditContext = CascadedEditContext;
             EditContext.OnValidationStateChanged += OnValidationStateChanged;
         }
-
-        await base.SetParametersAsync(parameters);
     }
 
     private void OnValidationStateChanged(object? sender, ValidationStateChangedEventArgs eargs) 
@@ -232,3 +226,4 @@
         EditContext = null;
     }
 }
+
