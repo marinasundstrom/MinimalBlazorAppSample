@@ -55,7 +55,7 @@ public class LayoutService
         }
     }
 
-    public async Task OnSystemPreferenceChanged(bool newValue)
+    public Task OnSystemPreferenceChanged(bool newValue)
     {
         _systemPreferences = newValue;
         if (DarkModeToggle == DarkLightMode.System)
@@ -63,6 +63,8 @@ public class LayoutService
             IsDarkMode = newValue;
             OnMajorUpdateOccured();
         }
+
+        return Task.CompletedTask;
     }
 
     public event EventHandler? MajorUpdateOccured;
