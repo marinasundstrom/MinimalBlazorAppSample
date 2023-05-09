@@ -1,4 +1,4 @@
-<MudButton ButtonType="@ButtonType" Disabled="@(Disabled || _processing)" OnClick="ProcessSomething" Variant="@Variant" Color="@((_error ? ErrorColor : Color).GetValueOrDefault())" Size="@Size">
+<MudButton ButtonType="@ButtonType" Disabled="@(Disabled || _processing)" OnClick="ProcessSomething" Variant="@Variant" Color="@((_success ? SuccessColor : (_error ? ErrorColor : Color)).GetValueOrDefault())" Size="@Size">
     @if (_processing)
     {
         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
@@ -18,6 +18,17 @@
             <MudText Class="@(ErrorIcon is not null ? "ms-2" : string.Empty)">@ErrorText</MudText>
         }
     }
+    else if(_success  && !(SuccessText is null && SuccessIcon is null))
+    {
+        if(SuccessIcon is not null) 
+        {
+            <MudIcon Class="ms-n1" Size="Size.Small" Icon="@SuccessIcon" />
+        }
+        if(ErrorText is not null) 
+        {
+            <MudText Class="@(SuccessIcon is not null ? "ms-2" : string.Empty)">@SuccessText</MudText>
+        }
+    }
     else
     {
         if(Icon is not null) 
@@ -33,7 +44,10 @@
 
 @code {
     private bool _processing = false;
+    private bool _success =  false;
     private bool _error =  false;
+    private CancellationTokenSource? cts;
+    private Task? resetTask;
 
     [Parameter]
     public ButtonType ButtonType { get; set; } = MudBlazor.ButtonType.Button;
@@ -62,6 +76,14 @@
     [Parameter]
     public string? ErrorText { get; set; } = "Try again";
 
+    public string? SuccessIcon { get; set; } = Icons.Material.Filled.Check;
+
+    [Parameter]
+    public Color? SuccessColor { get; set; } = MudBlazor.Color.Success;
+
+    [Parameter]
+    public string? SuccessText { get; set; } = "Success";
+
     [Parameter]
     public Variant Variant { get; set; } = MudBlazor.Variant.Text;
 
@@ -71,12 +93,29 @@
     [Parameter]
     public Size Size { get; set; } = MudBlazor.Size.Medium;
 
+    /// <summary>
+    /// The time after which the button shows the processing state.
+    /// </summary>
     [Parameter]
-    public int Timeout { get; set; } = 0;
+    public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(0);
+
+    /// <summary>
+    /// The time after which the button will reset.
+    /// </summary>
+    [Parameter]
+    public TimeSpan ResetTime { get; set; } = TimeSpan.FromSeconds(2);
+
+    [Parameter]
+    public bool ResetOnSuccess { get; set; } = true;
+
+    [Parameter]
+    public bool ResetOnFailure { get; set; } = true;
 
     public void Reset() 
     {
+        _processing = false;
         _error = false;
+        _success = false;
     }
 
     public Func<Task> Decorate(Func<Task> handler)
@@ -86,14 +125,15 @@
 
     public async Task InvokeHandler(Func<Task> handler)
     {
+        _success =  false;
         _error = false;
-        
-        CancellationTokenSource cts = new ();
+
+        cts = new ();
         Task? t = null;
 
         try 
         {
-            if(Timeout > 0) 
+            if(Timeout.TotalMilliseconds > 0) 
             {
                 t = Task.Delay(Timeout).ContinueWith((task) => { 
                         _processing = true;
@@ -106,6 +146,10 @@
             }
 
             await handler();
+
+            _success =  true;
+
+            StateHasChanged();
         }
         catch(TaskCanceledException)
         {
@@ -119,6 +163,14 @@
         {
             cts.Cancel();
             _processing = false;
+            
+            if(ResetTime.TotalMilliseconds > 0 && ((_success && ResetOnSuccess) || (_error && ResetOnFailure))) 
+            {
+                resetTask = Task.Delay(ResetTime).ContinueWith((task) => { 
+                    Reset();
+                    InvokeAsync(StateHasChanged); 
+                });
+            }
         }
     }
 
