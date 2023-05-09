@@ -1,4 +1,6 @@
-<MudButton ButtonType="@ButtonType" Disabled="@(Disabled)" OnClick="ProcessSomething" Variant="@Variant" Color="@((_processing ? LoadingColor : (_success ? SuccessColor : (_error ? ErrorColor : Color))).GetValueOrDefault())" Size="@Size">
+@implements IDisposable
+
+<MudButton ButtonType="@ButtonType" Disabled="@Disabled" OnClick="ProcessSomething" Variant="@Variant" Color="@((_processing ? LoadingColor : (_success ? SuccessColor : (_error ? ErrorColor : Color))).GetValueOrDefault())" Size="@Size">
     @if (_processing)
     {
         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" Color="MudBlazor.Color.Inherit"/>
@@ -50,71 +52,51 @@
     private CancellationTokenSource? resetCts;
     private Task? resetTask;
 
-    [Parameter]
-    public ButtonType ButtonType { get; set; } = MudBlazor.ButtonType.Button;
+    [Parameter] public ButtonType ButtonType { get; set; } = MudBlazor.ButtonType.Button;
 
-    [Parameter]
-    public bool Disabled { get; set; }
+    [Parameter] public bool Disabled { get; set; }
 
-    [Parameter]
-    public string? Icon { get; set; }
+    [Parameter] public string? Icon { get; set; }
 
-    [Parameter]
-    public EventCallback OnClick { get; set; } = default!;
+    [Parameter] public EventCallback OnClick { get; set; } = default!;
 
-    [Parameter]
-    public RenderFragment ChildContent { get; set; } = default!;
+    [Parameter] public RenderFragment ChildContent { get; set; } = default!;
 
-    [Parameter]
-    public Color? LoadingColor { get; set; } = MudBlazor.Color.Default;
+    [Parameter] public Color? LoadingColor { get; set; } = MudBlazor.Color.Default;
 
-    [Parameter]
-    public string? LoadingText { get; set; }
+    [Parameter] public string? LoadingText { get; set; }
 
-    [Parameter]
-    public string? ErrorIcon { get; set; } = Icons.Material.Filled.Error;
+    [Parameter] public string? ErrorIcon { get; set; } = Icons.Material.Filled.Error;
 
-    [Parameter]
-    public Color? ErrorColor { get; set; } = MudBlazor.Color.Error;
+    [Parameter] public Color? ErrorColor { get; set; } = MudBlazor.Color.Error;
 
-    [Parameter]
-    public string? ErrorText { get; set; } = "Try again";
+    [Parameter] public string? ErrorText { get; set; } = "Try again";
 
-    [Parameter]
-    public string? SuccessIcon { get; set; } = Icons.Material.Filled.Check;
+    [Parameter] public string? SuccessIcon { get; set; } = Icons.Material.Filled.Check;
 
-    [Parameter]
-    public Color? SuccessColor { get; set; } = MudBlazor.Color.Success;
+    [Parameter] public Color? SuccessColor { get; set; } = MudBlazor.Color.Success;
 
-    [Parameter]
-    public string? SuccessText { get; set; } = "Success";
+    [Parameter] public string? SuccessText { get; set; } = "Success";
 
-    [Parameter]
-    public Variant Variant { get; set; } = MudBlazor.Variant.Text;
+    [Parameter] public Variant Variant { get; set; } = MudBlazor.Variant.Text;
 
-    [Parameter]
-    public Color Color { get; set; } = MudBlazor.Color.Default;
+    [Parameter] public Color Color { get; set; } = MudBlazor.Color.Default;
 
-    [Parameter]
-    public Size Size { get; set; } = MudBlazor.Size.Medium;
+    [Parameter] public Size Size { get; set; } = MudBlazor.Size.Medium;
 
     /// <summary>
     /// The time after which the button shows the processing state.
     /// </summary>
-    [Parameter]
-    public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(0);
+    [Parameter] public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(0);
 
     /// <summary>
     /// The time after which the button will reset.
     /// </summary>
-    [Parameter]
-    public TimeSpan ResetTime { get; set; } = TimeSpan.FromSeconds(2);
+    [Parameter] public TimeSpan ResetTime { get; set; } = TimeSpan.FromSeconds(2);
 
-    [Parameter]
-    public bool ResetOnSuccess { get; set; } = true;
+    [Parameter] public bool ResetOnSuccess { get; set; } = true;
 
-    [Parameter]
-    public bool ResetOnFailure { get; set; } = true;
+    [Parameter] public bool ResetOnFailure { get; set; } = true;
 
     public void Reset() 
     {    
@@ -198,8 +180,55 @@
             return;
         }
         
+        if (EditContext is null && CascadedEditContext is not null)
+        {
+            EditContext = CascadedEditContext;
+            EditContext.OnValidationStateChanged += OnValidationStateChanged;
+        }
+
+        if (EditContext is not null)
+        {
+            if(!EditContext.Validate()) 
+            {
+                ResetCore();
+                return;
+            }
+        }
+
         await InvokeHandler(async () => {
             await OnClick.InvokeAsync();
         });
+    }
+
+    [CascadingParameter] private EditContext? CascadedEditContext { get; set; }
+
+    private EditContext? EditContext { get; set; }
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {        
+        if (EditContext is null && CascadedEditContext is not null)
+        {
+            EditContext = CascadedEditContext;
+            EditContext.OnValidationStateChanged += OnValidationStateChanged;
+        }
+
+        await base.SetParametersAsync(parameters);
+    }
+
+    private void OnValidationStateChanged(object? sender, ValidationStateChangedEventArgs eargs) 
+    {
+        bool isValid = EditContext!.GetValidationMessages().Count() == 0;
+
+        Disabled = !isValid;
+
+        StateHasChanged();
+    }
+
+    public void Dispose() 
+    {
+        if(EditContext is null) return;
+
+        EditContext.OnValidationStateChanged -= OnValidationStateChanged;
+        EditContext = null;
     }
 }

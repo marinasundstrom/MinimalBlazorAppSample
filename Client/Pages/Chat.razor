@@ -11,9 +11,9 @@
     <EditForm Model="@this" OnValidSubmit="async () => await sendButton.InvokeHandler(Send)">
         <DataAnnotationsValidator />
 
-        <MudTextField Label="User" Variant="@Variant.Outlined" Class="mb-2" @bind-Value="User" For="() => User" />
+        <MudTextField Label="User" Variant="@Variant.Outlined" Class="mb-2" Immediate="true" @bind-Value="User" For="() => User" />
 
-        <MudTextField Label="Message" Variant="@Variant.Outlined" Class="mb-2" @bind-Value="Message" For="() => Message" Lines="3" />
+        <MudTextField Label="Message" Variant="@Variant.Outlined" Class="mb-2" Immediate="true" @bind-Value="Message" For="() => Message" Lines="3" />
 
         <MudLoadingButton @ref="sendButton" ButtonType="@ButtonType.Submit" Variant="@Variant.Filled" Icon="@Icons.Material.Filled.Send" Disabled="@(!IsConnected)">Send</MudLoadingButton>
     </EditForm>
