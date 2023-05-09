@@ -7,6 +7,14 @@
 <MudText Class="mb-4">@T["CurrentCount", currentCount]</MudText>
 <MudLoadingButton Icon="@Icons.Material.Filled.Send" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" LoadingText="@T["Processing"]" SuccessText="@T["Success"]" ErrorText="@T["TryAgain"]" OnClick="IncrementCount">@T["ClickMe"]</MudLoadingButton>
 
+@*
+<MudLoadingButton Icon="@Icons.Material.Filled.Send" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" OnClick="IncrementCount">
+    <DefaultContent>@T["ClickMe"]</DefaultContent>
+    <LoadingContent>@T["Processing"]</LoadingContent>
+    <SuccessContent>@T["Success"]</SuccessContent>
+    <ErrorContent>@T["TryAgain"]</ErrorContent>
+</MudLoadingButton>
+*@
 
 @code {
     private int currentCount = 0;

@@ -3,43 +3,71 @@
 <MudButton ButtonType="@ButtonType" Disabled="@Disabled" OnClick="ProcessSomething" Variant="@Variant" Color="@((_processing ? LoadingColor : (_success ? SuccessColor : (_error ? ErrorColor : Color))).GetValueOrDefault())" Size="@Size">
     @if (_processing)
     {
-        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" Color="MudBlazor.Color.Inherit"/>
-        @if(LoadingText is not null) 
+        @if(LoadingContent is not null) 
         {
-            <span class="ms-2">@LoadingText</span>
+            @LoadingContent
+        }
+        else 
+        {
+            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" Color="MudBlazor.Color.Inherit"/>
+            @if(LoadingText is not null) 
+            {
+                <span class="ms-2">@LoadingText</span>
+            }
         }
     }
-    else if(_error && !(ErrorText is null && ErrorIcon is null))
+    else if(_error && (ErrorContent is not null || !(ErrorText is null && ErrorIcon is null)))
     {
-        if(ErrorIcon is not null) 
+        @if(ErrorContent is not null) 
         {
-            <MudIcon Class="ms-n1" Size="Size.Small" Icon="@ErrorIcon" />
+            @ErrorContent
         }
-        if(ErrorText is not null) 
+        else 
         {
-            <span class="@(ErrorIcon is not null ? "ms-2" : string.Empty)">@ErrorText</span>
+            if(ErrorIcon is not null) 
+            {
+                <MudIcon Class="ms-n1" Size="Size.Small" Icon="@ErrorIcon" />
+            }
+            if(ErrorText is not null) 
+            {
+                <span class="@(ErrorIcon is not null ? "ms-2" : string.Empty)">@ErrorText</span>
+            }
         }
     }
-    else if(_success  && !(SuccessText is null && SuccessIcon is null))
+    else if(_success && (SuccessContent is not null || !(SuccessText is null && SuccessIcon is null)))
     {
-        if(SuccessIcon is not null) 
+        @if(SuccessContent is not null) 
         {
-            <MudIcon Class="ms-n1" Size="Size.Small" Icon="@SuccessIcon" />
+            @SuccessContent
         }
-        if(ErrorText is not null) 
+        else 
         {
-            <span class="@(SuccessIcon is not null ? "ms-2" : string.Empty)">@SuccessText</span>
+            if(SuccessIcon is not null) 
+            {
+                <MudIcon Class="ms-n1" Size="Size.Small" Icon="@SuccessIcon" />
+            }
+            if(ErrorText is not null) 
+            {
+                <span class="@(SuccessIcon is not null ? "ms-2" : string.Empty)">@SuccessText</span>
+            }
         }
     }
     else
     {
-        if(Icon is not null) 
+        @if(DefaultContent is not null) 
         {
-            <MudIcon Class="ms-n1" Size="Size.Small" Icon="@Icon" />
+            @DefaultContent
         }
-        if(ChildContent is not null) 
+        else 
         {
-            <span class="@(Icon is not null ? "ms-2" : string.Empty)">@ChildContent</span>
+            if(Icon is not null) 
+            {
+                <MudIcon Class="ms-n1" Size="Size.Small" Icon="@Icon" />
+            }
+            if(ChildContent is not null) 
+            {
+                <span class="@(Icon is not null ? "ms-2" : string.Empty)">@ChildContent</span>
+            }
         }
     }
 </MudButton>
@@ -62,9 +90,13 @@
 
     [Parameter] public RenderFragment ChildContent { get; set; } = default!;
 
+    [Parameter] public RenderFragment? DefaultContent { get; set; }
+
     [Parameter] public Color? LoadingColor { get; set; } = MudBlazor.Color.Default;
 
-    [Parameter] public string? LoadingText { get; set; }
+    [Parameter] public string? LoadingText { get; set; } // = "Loading...";
+
+    [Parameter] public RenderFragment? LoadingContent { get; set; }
 
     [Parameter] public string? ErrorIcon { get; set; } = Icons.Material.Filled.Error;
 
@@ -72,11 +104,15 @@
 
     [Parameter] public string? ErrorText { get; set; } = "Try again";
 
+    [Parameter] public RenderFragment? ErrorContent { get; set; }
+
     [Parameter] public string? SuccessIcon { get; set; } = Icons.Material.Filled.Check;
 
     [Parameter] public Color? SuccessColor { get; set; } = MudBlazor.Color.Success;
 
     [Parameter] public string? SuccessText { get; set; } = "Success";
+
+    [Parameter] public RenderFragment? SuccessContent { get; set; }
 
     [Parameter] public Variant Variant { get; set; } = MudBlazor.Variant.Text;
 
@@ -211,9 +247,9 @@
 
     private void OnValidationStateChanged(object? sender, ValidationStateChangedEventArgs eargs) 
     {
-        bool isValid = EditContext!.GetValidationMessages().Count() == 0;
+        var hasErrors = EditContext!.GetValidationMessages().Count() > 0;
 
-        Disabled = !isValid;
+        Disabled = hasErrors;
 
         StateHasChanged();
     }
