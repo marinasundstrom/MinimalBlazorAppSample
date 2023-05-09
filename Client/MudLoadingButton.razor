@@ -4,7 +4,7 @@
         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" Color="MudBlazor.Color.Inherit"/>
         @if(LoadingText is not null) 
         {
-            <MudText Class="ms-2">@LoadingText</MudText>
+            <span class="ms-2">@LoadingText</span>
         }
     }
     else if(_error && !(ErrorText is null && ErrorIcon is null))
@@ -15,7 +15,7 @@
         }
         if(ErrorText is not null) 
         {
-            <MudText Class="@(ErrorIcon is not null ? "ms-2" : string.Empty)">@ErrorText</MudText>
+            <span class="@(ErrorIcon is not null ? "ms-2" : string.Empty)">@ErrorText</span>
         }
     }
     else if(_success  && !(SuccessText is null && SuccessIcon is null))
@@ -26,7 +26,7 @@
         }
         if(ErrorText is not null) 
         {
-            <MudText Class="@(SuccessIcon is not null ? "ms-2" : string.Empty)">@SuccessText</MudText>
+            <span class="@(SuccessIcon is not null ? "ms-2" : string.Empty)">@SuccessText</span>
         }
     }
     else
@@ -37,7 +37,7 @@
         }
         if(ChildContent is not null) 
         {
-            <MudText Class="@(Icon is not null ? "ms-2" : string.Empty)">@ChildContent</MudText>
+            <span class="@(Icon is not null ? "ms-2" : string.Empty)">@ChildContent</span>
         }
     }
 </MudButton>
