@@ -11,7 +11,8 @@ public class Theme
     public static MudTheme DefaultTheme() => new MudTheme() {
         Palette = new Palette
         {
-            AppbarBackground = "#137cdf", 
+            AppbarBackground = "#137cdf",
+            Background = "#f9f9f9ff",
             Primary = "#4892d7"
         }
     };
