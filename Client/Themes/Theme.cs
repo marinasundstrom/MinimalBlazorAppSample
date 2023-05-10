@@ -12,7 +12,7 @@ public class Theme
         Palette = new Palette
         {
             AppbarBackground = "#137cdf",
-            Background = "#f9f9f9ff",
+            Background = "#f9f9f942",
             Primary = "#4892d7"
         }
     };
