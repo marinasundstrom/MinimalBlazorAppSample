@@ -1,8 +1,4 @@
-﻿using System;
-
-using BlazorApp1.Client;
-
-namespace BlazorApp1.Server.Models;
+﻿namespace BlazorApp1.Server.Models;
 
 public sealed class Todo
 {

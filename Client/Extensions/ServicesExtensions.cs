@@ -3,8 +3,6 @@ using BlazorApp1.Client.Services.UserPreferences;
 
 using Blazored.LocalStorage;
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace BlazorApp1.Client.Extensions;
 
 public static class ServicesExtensions

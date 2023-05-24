@@ -1,6 +1,4 @@
-﻿using System;
-
-using BlazorApp1.Server.Models;
+﻿using BlazorApp1.Server.Models;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
