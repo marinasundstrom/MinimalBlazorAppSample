@@ -168,9 +168,9 @@
         {
             if(Timeout.TotalMilliseconds > 0) 
             {
-                t = Task.Delay(Timeout, cts.Token).ContinueWith((task) => { 
+                t = Task.Delay(Timeout, cts.Token).ContinueWith(async (task) => { 
                         _processing = true;
-                        InvokeAsync(StateHasChanged); 
+                        await InvokeAsync(StateHasChanged); 
                     }, cts.Token);
             }
             else
@@ -218,11 +218,17 @@
         
         if (EditContext is not null)
         {
+            ValidateCore();
+
+            return;
+            
+            /*
             if(!EditContext.Validate()) 
             {
                 ResetCore();
                 return;
             }
+            */
         }
 
         await InvokeHandler(async () => {
@@ -247,11 +253,22 @@
 
     private void OnValidationStateChanged(object? sender, ValidationStateChangedEventArgs eargs) 
     {
-        var hasErrors = EditContext!.GetValidationMessages().Count() > 0;
+        ValidateCore();
+    }
 
-        Disabled = hasErrors;
+    bool isValidating;
 
+    private void ValidateCore() 
+    {
+        if(isValidating) 
+            return;
+
+        isValidating = true;
+
+        Disabled = !EditContext!.Validate();
         StateHasChanged();
+
+        isValidating = false;
     }
 
     public void Dispose() 
