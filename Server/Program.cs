@@ -23,8 +23,6 @@ builder.Services.AddProblemDetails();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRazorPages();
 
-builder.Services.AddProblemDetails();
-
 builder.Services.AddSignalR();
 builder.Services.AddResponseCompression(opts =>
 {
