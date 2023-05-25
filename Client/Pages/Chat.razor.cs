@@ -25,7 +25,7 @@ public partial class Chat : IChatClient
 
         hubConnection.Closed += (exc) => 
         {
-            Snackbar.Add("Closed", Severity.Info);
+            Snackbar.Add("Connection closed", Severity.Info);
             return Task.CompletedTask;
         };
 
@@ -56,7 +56,7 @@ public partial class Chat : IChatClient
         }
         catch
         {
-            Snackbar.Add("Could not connect", Severity.Error);
+            Snackbar.Add("Unable to connect", Severity.Error);
         }
     }
 
