@@ -20,8 +20,12 @@
 		</OpenApiReference>
 	</ItemGroup>
 
+    <PropertyGroup>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
 	<PropertyGroup Condition=" '$(RunConfiguration)' == 'BlazorApp1' ">
-	  <ExternalConsole>true</ExternalConsole>
+	    <ExternalConsole>true</ExternalConsole>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -54,13 +54,16 @@
         }
     }
 
-    public Task ReceiveMessage(string user, string message) 
+    public async Task ReceiveMessage(string user, string message) 
     {
         messages.Add(new MessageDto(user, message));
-        
+
         StateHasChanged();
 
-        return Task.CompletedTask;
+        if(user != User) 
+        {
+            await PlaySound();
+        }        
     }
 
     public record MessageDto(string User, string Text);

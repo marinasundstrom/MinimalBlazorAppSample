@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices.JavaScript;
+
 using BlazorApp1.Shared;
 
 using Microsoft.AspNetCore.SignalR.Client;
@@ -13,10 +15,31 @@ public partial class Chat : IChatClient
     readonly CancellationTokenSource cts = new();
 
     protected override async Task OnInitializedAsync()
-    {
+    {   
+        await JSHost.ImportAsync("Chat", 
+            "../Pages/Chat.razor.js");
+
         hubConnection = new HubConnectionBuilder()
             .WithUrl(Navigation.ToAbsoluteUri("/chathub"))
             .Build();
+
+        hubConnection.Closed += (exc) => 
+        {
+            Snackbar.Add("Closed", Severity.Info);
+            return Task.CompletedTask;
+        };
+
+        hubConnection.Reconnecting += (exc) => 
+        {
+            Snackbar.Add("Reconnecting...", Severity.Info);
+            return Task.CompletedTask;
+        };
+
+        hubConnection.Reconnected += (message) => 
+        {
+            Snackbar.Add("Reconnected", Severity.Info);
+            return Task.CompletedTask;
+        };
 
         hubProxy = hubConnection.ServerProxy<IChatHub>();
         _ = hubConnection.ClientRegistration<IChatClient>(this);
@@ -24,6 +47,8 @@ public partial class Chat : IChatClient
         try
         {
             await hubConnection.StartAsync(cts.Token);
+
+            Snackbar.Add("Connected", Severity.Info);
         }
         catch (TaskCanceledException)
         {
@@ -48,4 +73,7 @@ public partial class Chat : IChatClient
         cts.Cancel();
         cts.Dispose();
     }
+
+    [JSImport("playSound", "Chat")]
+    internal static partial Task PlaySound();
 }
