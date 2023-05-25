@@ -60,3 +60,8 @@
 .loading-progress-text:after {
     content: var(--blazor-load-percentage-text, "Loading");
 }
+
+#splashscreen.dark {
+    background-color: #27272fff;
+    color: rgb(255, 255, 255);
+}
