@@ -37,7 +37,7 @@
 @code {
     MudLoadingButton sendButton = default!;
 
-    private List<MessageDto> messages = new List<MessageDto>();
+    private List<MessageViewModel> messages = new ();
 
     [Required]
     public string? User { get; set; }
@@ -56,7 +56,7 @@
 
     public async Task ReceiveMessage(string user, string message) 
     {
-        messages.Add(new MessageDto(user, message));
+        messages.Add(new MessageViewModel(user, message));
 
         StateHasChanged();
 
@@ -66,5 +66,5 @@
         }        
     }
 
-    public record MessageDto(string User, string Text);
+    public record MessageViewModel(string User, string Text);
 }
