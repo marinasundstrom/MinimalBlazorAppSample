@@ -8,10 +8,13 @@ Hosted Blazor WebAssembly app - on ASP.NET Core backend.
 
 ### Frontend
 * Blazor - MudBlazor UI
-* Web API clients - Generated from Open API
-* SignalR client - Generated with Source Generator
 * Localization
 * Color theme - Light and Dark mode
+* Chat sample
+  * SignalR client - Generated with Source Generator
+  * JS interop with JSImport - Generated with Source Generator
+* Todos sample
+  * Web API clients - Generated from Open API
 
 ### Backend
 * Minimal API endpoints
