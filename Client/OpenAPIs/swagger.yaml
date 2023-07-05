@@ -1,0 +1,265 @@
+﻿x-generator: NSwag v13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))
+openapi: 3.0.0
+info:
+  title: BlazorApp1 API
+  version: v1
+servers:
+- url: http://localhost:48670
+paths:
+  /v1/WeatherForecast:
+    get:
+      tags:
+      - SampleData
+      - SampleData
+      operationId: SampleData_GetForecast
+      parameters:
+      - name: startDate
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date-time
+        x-position: 1
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WeatherForecast'
+  /v1/Todos:
+    get:
+      tags:
+      - Todos
+      - Todos
+      operationId: Todos_GetTodos
+      parameters:
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+        x-position: 1
+      - name: pageSize
+        in: query
+        schema:
+          type: integer
+          format: int32
+        x-position: 2
+      - name: searchString
+        in: query
+        schema:
+          type: string
+        x-position: 3
+      - name: sortBy
+        in: query
+        schema:
+          type: string
+        x-position: 4
+      - name: sortDirection
+        in: query
+        schema:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/SortDirection'
+        x-position: 5
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemsResultOfTodo'
+        404:
+          description: ''
+    post:
+      tags:
+      - Todos
+      - Todos
+      operationId: Todos_AddTodo
+      requestBody:
+        x-name: request
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddTodoRequest'
+        required: true
+        x-position: 1
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        400:
+          description: ''
+  /v1/Todos/{id}:
+    get:
+      tags:
+      - Todos
+      - Todos
+      operationId: Todos_GetTodoById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: guid
+        x-position: 1
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        404:
+          description: ''
+    put:
+      tags:
+      - Todos
+      - Todos
+      operationId: Todos_UpdateTodo
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: guid
+        x-position: 1
+      requestBody:
+        x-name: request
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTodoRequest'
+        required: true
+        x-position: 2
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        404:
+          description: ''
+    delete:
+      tags:
+      - Todos
+      - Todos
+      operationId: Todos_DeleteTodo
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: guid
+        x-position: 1
+      responses:
+        200:
+          description: ''
+        404:
+          description: ''
+  /v1/Todos/{id}/Complete:
+    post:
+      tags:
+      - Todos
+      - Todos
+      operationId: Todos_MarkTodoAsComplete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: guid
+        x-position: 1
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        404:
+          description: ''
+components:
+  schemas:
+    WeatherForecast:
+      type: object
+      additionalProperties: false
+      properties:
+        date:
+          type: string
+          format: date-time
+        temperatureC:
+          type: integer
+          format: int32
+        summary:
+          type: string
+          nullable: true
+        temperatureF:
+          type: integer
+          format: int32
+    ItemsResultOfTodo:
+      type: object
+      additionalProperties: false
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Todo'
+        totalItems:
+          type: integer
+          format: int32
+    Todo:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: guid
+        title:
+          type: string
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        isCompleted:
+          type: boolean
+        completed:
+          type: string
+          format: date-time
+          nullable: true
+    SortDirection:
+      type: string
+      description: ''
+      x-enumNames:
+      - Desc
+      - Asc
+      enum:
+      - Desc
+      - Asc
+    AddTodoRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        title:
+          type: string
+    UpdateTodoRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        title:
+          type: string
