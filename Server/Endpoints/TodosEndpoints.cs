@@ -71,6 +71,8 @@ public static class TodosEndpoints
     public static async Task<Results<Ok<ItemsResult<Todo>>, NotFound>> GetTodos(DataContext context, int page = 0, int pageSize = 10, string? searchString = null, string? sortBy = null, SortDirection? sortDirection = null,
         CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         if (pageSize < 0)
         {
             throw new Exception("Page Size cannot be negative.");
@@ -113,24 +115,32 @@ public static class TodosEndpoints
 
     public static async Task<Results<Ok<Todo>, NotFound>> GetTodoById(Guid id, DataContext context, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var todo = await context.Todos.FirstOrDefaultAsync(todo => todo.Id == id, cancellationToken);
 
         return todo is not null ? Ok(todo) : NotFound();
     }
 
-    public static async Task<Results<Created<Todo>, BadRequest>> AddTodo(AddTodoRequest request, DataContext context, CancellationToken cancellationToken)
+    public static async Task<Results<Created<Todo>, BadRequest>> AddTodo(AddTodoRequest request, DataContext context, LinkGenerator linkGenerator, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(context);
+
         var todo = new Todo(request.Title);
 
         context.Todos.Add(todo);
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return Created($"/v1/Todos/{todo.Id}", todo);
+        return Created(linkGenerator.GetPathByName("Todos_GetTodoById", new { id = todo })!, todo);
     }
 
     public static async Task<Results<Ok<Todo>, NotFound>> UpdateTodo(Guid id, UpdateTodoRequest request, DataContext context, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNull(context);
+
         var todo = await context.Todos.FirstOrDefaultAsync(todo => todo.Id == id, cancellationToken);
 
         if (todo is null)
@@ -147,6 +157,8 @@ public static class TodosEndpoints
 
     public static async Task<Results<Ok<Todo>, NotFound>> MarkTodoAsComplete(Guid id, DataContext context, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var todo = await context.Todos.FirstOrDefaultAsync(todo => todo.Id == id, cancellationToken);
 
         if (todo is null)
@@ -163,6 +175,8 @@ public static class TodosEndpoints
 
     public static async Task<Results<Ok, NotFound>> DeleteTodo(Guid id, DataContext context, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         var removed = await context.Todos
             .Where(todo => todo.Id == id)
             .ExecuteDeleteAsync(cancellationToken);

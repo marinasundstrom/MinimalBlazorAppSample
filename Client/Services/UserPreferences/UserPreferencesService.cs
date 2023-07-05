@@ -12,13 +12,13 @@ public interface IUserPreferencesService
     /// Saves UserPreferences in local storage
     /// </summary>
     /// <param name="userPreferences">The userPreferences to save in the local storage</param>
-    public Task SaveUserPreferences(UserPreferences userPreferences);
+    public Task SaveUserPreferences(UserPreferencesData userPreferences);
 
     /// <summary>
     /// Loads UserPreferences in local storage
     /// </summary>
     /// <returns>UserPreferences object. Null when no settings were found.</returns>
-    public Task<UserPreferences> LoadUserPreferences();
+    public Task<UserPreferencesData> LoadUserPreferences();
 }
 
 public class UserPreferencesService : IUserPreferencesService
@@ -31,13 +31,13 @@ public class UserPreferencesService : IUserPreferencesService
         _localStorage = localStorage;
     }
 
-    public async Task SaveUserPreferences(UserPreferences userPreferences)
+    public async Task SaveUserPreferences(UserPreferencesData userPreferences)
     {
         await _localStorage.SetItemAsync(Key, userPreferences);
     }
 
-    public async Task<UserPreferences> LoadUserPreferences()
+    public async Task<UserPreferencesData> LoadUserPreferences()
     {
-        return await _localStorage.GetItemAsync<UserPreferences>(Key);
+        return await _localStorage.GetItemAsync<UserPreferencesData>(Key);
     }
 }

@@ -4,7 +4,7 @@
 
 namespace BlazorApp1.Client.Services.UserPreferences;
 
-public class UserPreferences
+public sealed class UserPreferencesData
 {
     /// <summary>
     /// Set the direction layout of the docs to RTL or LTR. If true RTL is used

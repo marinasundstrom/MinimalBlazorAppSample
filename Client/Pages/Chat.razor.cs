@@ -15,27 +15,27 @@ public partial class Chat : IChatClient
     readonly CancellationTokenSource cts = new();
 
     protected override async Task OnInitializedAsync()
-    {   
-        await JSHost.ImportAsync("Chat", 
+    {
+        await JSHost.ImportAsync("Chat",
             "../Pages/Chat.razor.js");
 
         hubConnection = new HubConnectionBuilder()
             .WithUrl(Navigation.ToAbsoluteUri("/chathub"))
             .Build();
 
-        hubConnection.Closed += (exc) => 
+        hubConnection.Closed += (exc) =>
         {
             Snackbar.Add("Connection closed", Severity.Info);
             return Task.CompletedTask;
         };
 
-        hubConnection.Reconnecting += (exc) => 
+        hubConnection.Reconnecting += (exc) =>
         {
             Snackbar.Add("Reconnecting...", Severity.Info);
             return Task.CompletedTask;
         };
 
-        hubConnection.Reconnected += (message) => 
+        hubConnection.Reconnected += (message) =>
         {
             Snackbar.Add("Reconnected", Severity.Info);
             return Task.CompletedTask;
@@ -54,10 +54,12 @@ public partial class Chat : IChatClient
         {
 
         }
+#pragma warning disable CA1031
         catch
         {
             Snackbar.Add("Unable to connect", Severity.Error);
         }
+#pragma warning restore CA1031
     }
 
     public bool IsConnected =>
@@ -65,6 +67,8 @@ public partial class Chat : IChatClient
 
     public async ValueTask DisposeAsync()
     {
+        GC.SuppressFinalize(this);
+
         if (hubConnection is not null)
         {
             await hubConnection.DisposeAsync();

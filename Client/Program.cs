@@ -1,16 +1,17 @@
 using System.Globalization;
+using System.Runtime.Versioning;
 
 using BlazorApp1.Client;
 using BlazorApp1.Client.Extensions;
 
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-
-using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 
 using MudBlazor;
 using MudBlazor.Services;
+
+[assembly: SupportedOSPlatform("browser")]
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -31,17 +32,17 @@ builder.Services.AddMudServices(config =>
 
 builder.Services.AddLocalization();
 
-const string HttpClientName = "Site";
+const string httpClientName = "Site";
 
-builder.Services.AddHttpClient(HttpClientName, (sp, http) =>
+builder.Services.AddHttpClient(httpClientName, (sp, http) =>
 {
     http.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
 });
 
-builder.Services.AddHttpClient<ISampleDataClient>(HttpClientName)
+builder.Services.AddHttpClient<ISampleDataClient>(httpClientName)
 .AddTypedClient<ISampleDataClient>((http, sp) => new SampleDataClient(http));
 
-builder.Services.AddHttpClient<ITodosClient>(HttpClientName)
+builder.Services.AddHttpClient<ITodosClient>(httpClientName)
 .AddTypedClient<ITodosClient>((http, sp) => new TodosClient(http));
 
 builder.Services.AddServices();
@@ -56,7 +57,7 @@ static async Task Localize(IServiceProvider serviceProvider)
 {
     CultureInfo culture;
     var js = serviceProvider.GetRequiredService<IJSRuntime>();
-    var result = await js.InvokeAsync<string>("blazorCulture.get");
+    var result = await js.InvokeAsync<string>("blazorCulture.get").ConfigureAwait(false);
 
     if (result != null)
     {
@@ -65,7 +66,7 @@ static async Task Localize(IServiceProvider serviceProvider)
     else
     {
         culture = new CultureInfo("en-US");
-        await js.InvokeVoidAsync("blazorCulture.set", "en-US");
+        await js.InvokeVoidAsync("blazorCulture.set", "en-US").ConfigureAwait(false);
     }
 
     CultureInfo.DefaultThreadCurrentCulture = culture;

@@ -21,7 +21,11 @@
 
     private async Task IncrementCount()
     {
+        #pragma warning disable CA5394
+
         var v = Random.Shared.Next(0, 2000);
+
+        #pragma warning restore CA5394
 
         await Task.Delay(v);
 

@@ -11,16 +11,16 @@ namespace BlazorApp1.Client.Services;
 public class LayoutService
 {
     private readonly IUserPreferencesService _userPreferencesService;
-    private UserPreferences.UserPreferences _userPreferences = default!;
+    private UserPreferences.UserPreferencesData _userPreferences = default!;
     private bool _systemPreferences;
 
-    public bool IsRTL { get; private set; } = false;
-    public DarkLightMode DarkModeToggle = DarkLightMode.System;
+    public bool IsRTL { get; private set; }
+
+    public DarkLightMode DarkModeToggle { get; private set; } = DarkLightMode.System;
 
     public bool IsDarkMode { get; private set; }
 
     public MudTheme CurrentTheme { get; private set; } = default!;
-
 
     public LayoutService(IUserPreferencesService userPreferencesService)
     {
@@ -50,7 +50,7 @@ public class LayoutService
         else
         {
             IsDarkMode = isDarkModeDefaultTheme;
-            _userPreferences = new UserPreferences.UserPreferences { DarkLightTheme = DarkLightMode.System };
+            _userPreferences = new UserPreferences.UserPreferencesData { DarkLightTheme = DarkLightMode.System };
             await _userPreferencesService.SaveUserPreferences(_userPreferences);
         }
     }

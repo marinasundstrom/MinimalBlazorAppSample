@@ -362,3 +362,25 @@ dotnet_naming_style.s_camelcase.required_suffix =
 dotnet_naming_style.s_camelcase.word_separator = 
 dotnet_naming_style.s_camelcase.capitalization = camel_case
 
+[*.{cs,vb}]
+# CA1024: Use properties where appropriate (code analysis)
+dotnet_diagnostic.CA1024.severity = suggestion
+
+# CA1034: Nested types should not be visible (code analysis)
+dotnet_diagnostic.CA1034.severity = none
+
+# CA1716: Identifiers should not match keywords
+dotnet_diagnostic.CA1716.severity = none
+
+# CA1724: Type Names Should Not Match Namespaces
+dotnet_diagnostic.CA1724.severity = none
+
+# CA1062: Validate arguments of public methods
+dotnet_diagnostic.CA1062.severity = warning
+
+# CA2007: Do not directly await a Task
+# Not applicable here
+dotnet_diagnostic.CA2007.severity = none
+
+# CA5394: Do not use insecure randomness (code analysis)
+dotnet_diagnostic.CA5394.severity = warning 

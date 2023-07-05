@@ -6,10 +6,11 @@ using MudBlazor;
 
 namespace BlazorApp1.Client.Themes;
 
-public class Theme
+public static class Theme
 {
-    public static MudTheme DefaultTheme() => new MudTheme() {
-        Palette = new Palette
+    public static MudTheme DefaultTheme() => new()
+    {
+        Palette = new PaletteLight
         {
             AppbarBackground = "#137cdf",
             Background = "#f9f9f942",
