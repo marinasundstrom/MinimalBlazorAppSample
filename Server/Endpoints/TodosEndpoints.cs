@@ -6,6 +6,7 @@ using BlazorApp1.Server.Data;
 using BlazorApp1.Server.Models;
 
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 
 using static BlazorApp1.Server.ApiVersions;
@@ -122,7 +123,7 @@ public static class TodosEndpoints
         return todo is not null ? Ok(todo) : NotFound();
     }
 
-    public static async Task<Results<Created<Todo>, BadRequest>> AddTodo(AddTodoRequest request, DataContext context, LinkGenerator linkGenerator, CancellationToken cancellationToken)
+    public static async Task<Results<Created<Todo>, BadRequest>> AddTodo(AddTodoRequest request, HttpContext httpContext, DataContext context, LinkGenerator linkGenerator, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNull(context);
@@ -133,7 +134,8 @@ public static class TodosEndpoints
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return Created(linkGenerator.GetPathByName("Todos_GetTodoById", new { id = todo })!, todo);
+        var uri = linkGenerator.GetPathByName(httpContext, "Todos_GetTodoById", values: new { id = todo.Id })!;
+        return Created(uri, todo);
     }
 
     public static async Task<Results<Ok<Todo>, NotFound>> UpdateTodo(Guid id, UpdateTodoRequest request, DataContext context, CancellationToken cancellationToken)
